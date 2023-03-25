@@ -31,4 +31,16 @@ services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connect
 
 var app = builder.Build();
 
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ScheduleFaculty.Api v1"));
+
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 app.Run();
