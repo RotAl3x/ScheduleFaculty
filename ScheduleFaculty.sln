@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleFaculty", "ScheduleFaculty\ScheduleFaculty.csproj", "{320DD163-0955-464C-97C0-57156560AE49}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleFaculty.Api", "ScheduleFaculty.Api\ScheduleFaculty.Api.csproj", "{A56850AF-8804-441D-A750-FCDC7CD0F77D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleFaculty.Core", "ScheduleFaculty.Core\ScheduleFaculty.Core.csproj", "{21663E8A-5B08-42E6-A3EF-8C41BAEEF954}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +10,13 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{320DD163-0955-464C-97C0-57156560AE49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{320DD163-0955-464C-97C0-57156560AE49}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{320DD163-0955-464C-97C0-57156560AE49}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{320DD163-0955-464C-97C0-57156560AE49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A56850AF-8804-441D-A750-FCDC7CD0F77D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A56850AF-8804-441D-A750-FCDC7CD0F77D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A56850AF-8804-441D-A750-FCDC7CD0F77D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A56850AF-8804-441D-A750-FCDC7CD0F77D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21663E8A-5B08-42E6-A3EF-8C41BAEEF954}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21663E8A-5B08-42E6-A3EF-8C41BAEEF954}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21663E8A-5B08-42E6-A3EF-8C41BAEEF954}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21663E8A-5B08-42E6-A3EF-8C41BAEEF954}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
