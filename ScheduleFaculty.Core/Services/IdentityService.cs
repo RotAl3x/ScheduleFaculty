@@ -147,6 +147,15 @@ public class IdentityService : IIdentityService
 
     public async Task<ActionResponse<string>> ChangePassword(ChangePasswordRequest request,ApplicationUser user)
     {
+
+        if (!request.newPassword.Equals(request.repeatPassword))
+        {
+            return new ActionResponse<string>
+            {
+                Action = "ChangePassword",
+                Errors = new List<string> { "Password don't match" }
+            };
+        }
         
         var changePassword =
             await _userManager.ChangePasswordAsync(user, request.currentPassword, request.newPassword);
