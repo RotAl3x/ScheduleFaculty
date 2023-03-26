@@ -12,13 +12,12 @@ namespace ScheduleFaculty.Api.ApiControllers;
 
 [ApiController]
 [Route("/api/auth")]
-
-public class AuthController: ControllerBase
+public class AuthController : ControllerBase
 {
     private readonly IIdentityService _identityService;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public AuthController(UserManager<ApplicationUser> userManager,IIdentityService identityService)
+    public AuthController(UserManager<ApplicationUser> userManager, IIdentityService identityService)
     {
         _userManager = userManager;
         _identityService = identityService;
@@ -33,11 +32,13 @@ public class AuthController: ControllerBase
             return BadRequest(response.Errors);
         }
 
-        return Ok(((ActionResponse<Session>) response).Item);
+        return Ok(((ActionResponse<Session>)response).Item);
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+    [HttpPost("registerSecretary")]
+    [Authorize(Roles = "Secretary",
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> RegisterSecretary([FromBody] RegisterRequest request)
     {
         var response = await _identityService.Register(request, "Secretary");
         if (response.HasErrors())
@@ -48,8 +49,37 @@ public class AuthController: ControllerBase
         return Ok(response.Item);
     }
     
+    [HttpPost("registerProfessor")]
+    [Authorize(Roles = "Secretary",
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> RegisterProfessor([FromBody] RegisterRequest request)
+    {
+        var response = await _identityService.Register(request, "Professor");
+        if (response.HasErrors())
+        {
+            return BadRequest(response.Errors);
+        }
+
+        return Ok(response.Item);
+    }
+    
+    [HttpPost("registerLabAssistant")]
+    [Authorize(Roles = "Secretary,Professor,LabAssistant",
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> RegisterLabAssistant([FromBody] RegisterRequest request)
+    {
+        var response = await _identityService.Register(request, "LabAssistant");
+        if (response.HasErrors())
+        {
+            return BadRequest(response.Errors);
+        }
+
+        return Ok(response.Item);
+    }
+
     [HttpPost("changePassword")]
-    [Authorize(Roles="Secretary,Professor,LabAssistant", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Roles = "Secretary,Professor,LabAssistant",
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
     {
         var user = await _userManager.GetUserAsync(User);
@@ -58,7 +88,7 @@ public class AuthController: ControllerBase
         {
             return NotFound("Error to find user");
         }
-        
+
         var response = await _identityService.ChangePassword(request, user);
         if (response.HasErrors())
         {
