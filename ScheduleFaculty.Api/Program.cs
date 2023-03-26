@@ -43,7 +43,7 @@ services.AddAuthentication()
 
 services.Configure<IdentityOptions>(options =>
 {
-    options.Password.RequireDigit = true;
+    options.Password.RequireDigit = false;
     options.Password.RequireLowercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
@@ -51,6 +51,8 @@ services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 3;
 
     options.SignIn.RequireConfirmedEmail = true;
+    options.ClaimsIdentity.UserIdClaimType = "id";
+
 });
 
 services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();

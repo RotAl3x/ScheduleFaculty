@@ -61,7 +61,7 @@ public class IdentityService : IIdentityService
             UserId = user.Id,
             TokenType = "Bearer",
             Token = GenerateToken(user, roles.FirstOrDefault()),
-            Username = user.UserName,
+            UserName = user.UserName,
             Role = roles.FirstOrDefault(),
         };
 
@@ -126,9 +126,9 @@ public class IdentityService : IIdentityService
         Console.WriteLine(_configuration.GetSection("JWT:Issuer").Value);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[]
+            Subject = new ClaimsIdentity(new Claim[]
             {
-                new(JwtRegisteredClaimNames.Sub, newUser.UserName),
+                new Claim(JwtRegisteredClaimNames.Sub, newUser.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iss, _configuration.GetSection("JWT:Issuer").Value),
                 new Claim("id", newUser.Id),
@@ -143,5 +143,28 @@ public class IdentityService : IIdentityService
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
         return tokenHandler.WriteToken(token);
+    }
+
+    public async Task<ActionResponse<string>> ChangePassword(ChangePasswordRequest request,ApplicationUser user)
+    {
+        
+        var changePassword =
+            await _userManager.ChangePasswordAsync(user, request.currentPassword, request.newPassword);
+        
+        if (!changePassword.Succeeded)
+        {
+            var response = new ActionResponse<string>
+            {
+                Action = "ChangePassword"
+            };
+            
+            foreach (var error in changePassword.Errors) response.AddError(error.Description);
+            return response;
+        }
+        return new ActionResponse<string>
+        {
+            Action = "ChangePassword",
+            Item = "Your password has been changed."
+        };
     }
 }
