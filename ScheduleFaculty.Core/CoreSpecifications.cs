@@ -1,6 +1,7 @@
 ﻿//using ScheduleFaculty.Core.Services;
 //using ScheduleFaculty.Core.Services.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
+using ScheduleFaculty.Core.Entities;
 using ScheduleFaculty.Core.Services;
 using ScheduleFaculty.Core.Services.Abstractions;
 
@@ -11,6 +12,8 @@ public static class CoreSpecifications
 {
     public static IServiceCollection AddCoreSpecifications(this IServiceCollection services)
     {
+        services.AddScoped<IClassroomRepository, ClassroomRepository>();
+        // services.AddScoped<ISectionRepository, SectionRepository>();
         services.AddScoped<IIdentityService, IdentityService>();
 
         return services;

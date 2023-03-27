@@ -16,7 +16,7 @@ var configuration = builder.Configuration;
 services.AddControllersWithViews().AddNewtonsoftJson();
 services.AddRazorPages();
 
-//services.AddAutoMapper(typeof(MappingProfile));
+services.AddAutoMapper(typeof(MappingProfile));
 
 services.AddDefaultIdentity<ApplicationUser>()
     .AddRoles<IdentityRole>()
