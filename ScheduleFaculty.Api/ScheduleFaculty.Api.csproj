@@ -39,4 +39,8 @@
       <ProjectReference Include="..\ScheduleFaculty.Core\ScheduleFaculty.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Controllers" />
+    </ItemGroup>
+
 </Project>

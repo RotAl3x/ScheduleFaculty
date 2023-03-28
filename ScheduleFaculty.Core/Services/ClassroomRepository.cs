@@ -16,73 +16,51 @@ public class ClassroomRepository : IClassroomRepository
         _dbContext = dbContext;
     }
 
-    public async Task<ActionResponse<ClassroomResponse>> GetClassroom(Guid id)
+    public async Task<ActionResponse<Classroom>> GetClassroom(Guid id)
     {
-        var response = new ActionResponse<ClassroomResponse>();
-
-        var freeDaysClassrooms = await _dbContext.FreeDaysClassrooms
-            .Where(f => f.ClassroomId == id).Select(f=>f.DaysOfWeek).ToListAsync();
-
+        var response = new ActionResponse<Classroom>();
         var classroom = await _dbContext.Classrooms.SingleOrDefaultAsync(c => c.Id == id);
 
-        if (classroom is null)
+        if (classroom == null)
         {
-            response.AddError("Classroom doesn't exists");
+            response.AddError("Classroom doesn't exist");
             return response;
         }
 
-        response.Item.Id = classroom.Id;
-        response.Item.Name = classroom.Name;
-        response.Item.DaysOfWeeks = freeDaysClassrooms; 
-
+        response.Item = classroom;
         return response;
     }
 
-    public async Task<ActionResponse<List<ClassroomResponse>>> GetAllClassrooms()
+    public async Task<ActionResponse<List<Classroom>>> GetAllClassrooms()
     {
-        var response = new ActionResponse<List<ClassroomResponse>>();
-
-        var classroomsWithFreeDays = new List<ClassroomResponse>();
-
+        var response = new ActionResponse<List<Classroom>>();
         var classrooms = await _dbContext.Classrooms.ToListAsync();
-        var freeDaysClassrooms = _dbContext.FreeDaysClassrooms;
-        
-        var i = 0;
-        foreach (var c in classrooms)
+
+        response.Item = classrooms;
+        return response;
+    }
+
+    public async Task<ActionResponse<Classroom>> CreateClassroom(string name, List<DaysOfWeek> freeDays)
+    {
+        var response = new ActionResponse<Classroom>();
+
+        var nameExists = await _dbContext.Classrooms.AnyAsync(c => c.Name == name);
+
+        if (nameExists)
         {
-            classroomsWithFreeDays[i].Id = c.Id;
-            classroomsWithFreeDays[i].Name = c.Name;
-            classroomsWithFreeDays[i].DaysOfWeeks = await freeDaysClassrooms
-                .Where(f => f.ClassroomId == c.Id)
-                .Select(f => f.DaysOfWeek).ToListAsync();
-            i++;
+            response.AddError("Classroom with the same name already exists");
+            return response;
         }
 
+        var classroom = new Classroom { Name = name, DaysOfWeek = freeDays };
+        var dbClassroom = await _dbContext.Classrooms.AddAsync(classroom);
+        await _dbContext.SaveChangesAsync();
 
-        response.Item = classroomsWithFreeDays;
-        
+        response.Item = dbClassroom.Entity;
         return response;
     }
 
-    public async Task<ActionResponse<ClassroomResponse>> CreateClassroom(string name, List<DaysOfWeek> freeDays)
-    {
-        var response = new ActionResponse<ClassroomResponse>();
-
-        var classroom = new Classroom
-        {
-                Name = name
-        };
-
-        var dbClassroom = await _dbContext.AddAsync(classroom);
-        await _dbContext.SaveChangesAsync();
-        
-        freeDays.ForEach(f =>
-        {
-            
-        });
-    }
-
-    public Task<ActionResponse<ClassroomResponse>> EditClassroom(Guid id, string name, List<DaysOfWeek> freeDays)
+    public Task<ActionResponse<Classroom>> EditClassroom(Guid id, string name, List<DaysOfWeek> freeDays)
     {
         throw new NotImplementedException();
     }
