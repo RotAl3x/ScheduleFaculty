@@ -1,10 +1,10 @@
 namespace ScheduleFaculty.Core.Entities;
 
-public class Section
+public class StudyProgram
 {
     public Guid Id { get; set; }
     
     public string Name { get; set; }
     
-    public int Years { get; set; }
+    public int Year { get; set; }
 }

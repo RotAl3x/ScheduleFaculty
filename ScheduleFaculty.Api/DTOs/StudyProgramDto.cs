@@ -1,10 +1,10 @@
 namespace ScheduleFaculty.Api.DTOs;
 
-public class SectionDto
+public class StudyProgramDto
 {
     public Guid Id { get; set; }
     
     public string Name { get; set; }
     
-    public int Years { get; set; }
+    public int Year { get; set; }
 }

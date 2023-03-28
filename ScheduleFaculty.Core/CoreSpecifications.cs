@@ -13,7 +13,7 @@ public static class CoreSpecifications
     public static IServiceCollection AddCoreSpecifications(this IServiceCollection services)
     {
         services.AddScoped<IClassroomRepository, ClassroomRepository>();
-        // services.AddScoped<ISectionRepository, SectionRepository>();
+        services.AddScoped<IStudyProgramRepository, StudyProgramRepository>();
         services.AddScoped<IIdentityService, IdentityService>();
 
         return services;

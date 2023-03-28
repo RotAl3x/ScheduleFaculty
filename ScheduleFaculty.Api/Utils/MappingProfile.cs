@@ -9,6 +9,6 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<Classroom, ClassroomDto>().ReverseMap();
-        // CreateMap<Section, SectionDto>().ReverseMap();
+        CreateMap<StudyProgram, StudyProgramDto>().ReverseMap();
     }
 }
