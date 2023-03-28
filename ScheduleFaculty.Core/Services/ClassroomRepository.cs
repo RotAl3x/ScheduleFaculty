@@ -60,18 +60,45 @@ public class ClassroomRepository : IClassroomRepository
         return response;
     }
 
-    public Task<ActionResponse<Classroom>> EditClassroom(Guid id, string name, List<DaysOfWeek> freeDays)
+    public async Task<ActionResponse<Classroom>> EditClassroom(Guid id, string name, List<DaysOfWeek> freeDays)
     {
-        throw new NotImplementedException();
+        var response = new ActionResponse<Classroom>();
+
+        var classroomToChange = await _dbContext.Classrooms.SingleOrDefaultAsync(c => c.Id == id);
+
+        if (classroomToChange is null)
+        {
+            response.AddError("Classroom doesn't exist");
+            return response;
+        }
+
+        classroomToChange.Name = name;
+        classroomToChange.DaysOfWeek = freeDays;
+        await _dbContext.SaveChangesAsync();
+        response.Item = classroomToChange;
+        return response;
     }
 
-    public Task<ActionResponse> DeleteClassroom(Guid id)
+    public async Task<ActionResponse> DeleteClassroom(Guid id)
     {
-        throw new NotImplementedException();
+        var response = new ActionResponse();
+
+        var classroomToDelete = await _dbContext.Classrooms.SingleOrDefaultAsync(c => c.Id == id);
+        
+        if (classroomToDelete is null)
+        {
+            response.AddError("Classroom doesn't exist");
+            return response;
+        }
+
+        _dbContext.Classrooms.Remove(classroomToDelete);
+        await _dbContext.SaveChangesAsync();
+
+        return response;
     }
 
-    public Task SaveClassrooms()
+    public async Task SaveClassrooms()
     {
-        throw new NotImplementedException();
+        await _dbContext.SaveChangesAsync();
     }
 }

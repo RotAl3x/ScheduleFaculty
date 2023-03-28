@@ -59,4 +59,32 @@ public class ClassroomController : ControllerBase
         var response = _mapper.Map<ClassroomDto>(classroom.Item);
         return Ok(response);
     }
+
+    [HttpPatch("edit")]
+    [Authorize(Roles = "Secretary",
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<ActionResult> EditClassroom([FromBody] ClassroomDto classroomDto)
+    {
+        var classroom = await _classroomRepository.EditClassroom(classroomDto.Id,classroomDto.Name, classroomDto.DaysOfWeek);
+        if (classroom.HasErrors())
+        {
+            return BadRequest(classroom.Errors);
+        }
+
+        var response = _mapper.Map<ClassroomDto>(classroom.Item);
+        return Ok(response);
+    }
+    
+    [HttpDelete("delete/{id}")]
+    [Authorize(Roles = "Secretary",
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<ActionResult> DeleteClassroom([FromRoute] Guid id)
+    {
+        var classroom = await _classroomRepository.DeleteClassroom(id);
+        if (classroom.HasErrors())
+        {
+            return BadRequest(classroom.Errors);
+        }
+        return Ok();
+    }
 }
