@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.EntityFrameworkCore;
 using ScheduleFaculty.Core.Database;
 using ScheduleFaculty.Core.Entities;
@@ -15,24 +16,41 @@ public class StudyYearGroupRepository : IStudyYearGroupRepository
         _dbContext = dbContext;
     }
 
-    public Task<ActionResponse<List<StudyYearGroup>>> GetStudyYearGroup(Guid studyProgramId)
+    public async Task<ActionResponse<List<StudyYearGroup>>> GetStudyYearGroup(Guid studyProgramId)
     {
-        throw new NotImplementedException();
+        var response = new ActionResponse<List<StudyYearGroup>>();
+        var studyYearGroup = await _dbContext.StudyYearGroups.Where(s => s.StudyProgramYearId == studyProgramId)
+            .ToListAsync();
+        if (studyYearGroup.Count == 0)
+        {
+            response.AddError("Student program doesn't exist");
+            return response;
+        }
+
+        response.Item = studyYearGroup;
+        return response;
     }
 
-    public Task<ActionResponse<List<List<StudyYearGroup>>>> GetAllStudyYearGroups()
+    public async Task<ActionResponse<TotalGroups>> GetStudyYearNumberOfGroups(Guid studyProgramId)
     {
-        throw new NotImplementedException();
-    }
+        var response = new ActionResponse<TotalGroups>();
+        var studyYearNumberOfGroups = await _dbContext.StudyYearGroups.OrderByDescending(s => s.SemiGroup)
+            .FirstOrDefaultAsync(s => s.StudyProgramYearId == studyProgramId);
+        if (studyYearNumberOfGroups is null)
+        {
+            response.AddError("Student program doesn't exist");
+            return response;
+        }
 
-    public Task<ActionResponse<TotalGroups>> GetStudyYearNumberOfGroups(Guid studyProgramId)
-    {
-        throw new NotImplementedException();
-    }
+        var totalGroup = new TotalGroups
+        {
+            StudyProgramId = studyProgramId,
+            NumberOfSemiGroups = studyYearNumberOfGroups.SemiGroup,
+            HowManySemiGroupsAreInAGroup = (studyYearNumberOfGroups.SemiGroup - 1) / studyYearNumberOfGroups.Group + 1
+        };
 
-    public Task<ActionResponse<List<TotalGroups>>> GetAllStudyYearNumberOfGroups()
-    {
-        throw new NotImplementedException();
+        response.Item = totalGroup;
+        return response;
     }
 
     public async Task<ActionResponse<List<StudyYearGroup>>> CreateStudyYearGroup(Guid studyProgramId,
@@ -49,39 +67,106 @@ public class StudyYearGroupRepository : IStudyYearGroupRepository
             return response;
         }
 
-        var dbGroups = new List<StudyYearGroup>();
+        var semiGroup = new List<StudyYearGroup>();
 
         for (var i = 0; i < numberOfSemiGroups; i++)
         {
-            var semiGroup = new StudyYearGroup
+            semiGroup.Add(new StudyYearGroup
             {
-                SemiGroup = i+1,
+                SemiGroup = i + 1,
                 Group = i / howManySemiGroupsAreInAGroup + 1,
                 Name = i / howManySemiGroupsAreInAGroup + 1 + "." + (i % howManySemiGroupsAreInAGroup + 1),
                 StudyProgramYearId = studyProgramId
-            };
-            var dbStudyYearGroup = await _dbContext.StudyYearGroups.AddAsync(semiGroup);
-            dbGroups.Add(dbStudyYearGroup.Entity);
+            });
         }
 
+        await _dbContext.StudyYearGroups.AddRangeAsync(semiGroup);
         await _dbContext.SaveChangesAsync();
-        response.Item = dbGroups;
+        response.Item = semiGroup;
         return response;
     }
 
-    public Task<ActionResponse<List<StudyYearGroup>>> EditStudyYearGroup(Guid studyProgramId, int numberOfSemiGroups,
+    public async Task<ActionResponse<List<StudyYearGroup>>> EditStudyYearGroup(Guid studyProgramId,
+        int numberOfSemiGroups,
         int howManySemiGroupsAreInAGroup)
     {
-        throw new NotImplementedException();
+        var response = new ActionResponse<List<StudyYearGroup>>();
+        var studyYearNumberOfGroupsEntity = _dbContext.StudyYearGroups.OrderByDescending(s => s.SemiGroup);
+        var studyYearNumberOfGroups =
+            await studyYearNumberOfGroupsEntity.FirstOrDefaultAsync(s => s.StudyProgramYearId == studyProgramId);
+        var groupsToList = await studyYearNumberOfGroupsEntity.ToListAsync();
+        if (studyYearNumberOfGroups is null)
+        {
+            response.AddError("Student program doesn't exist");
+            return response;
+        }
+
+
+        var semiGroup = new List<StudyYearGroup>();
+        if (howManySemiGroupsAreInAGroup != ((studyYearNumberOfGroups.SemiGroup - 1) / studyYearNumberOfGroups.Group + 1))
+        {
+            for (var i = studyYearNumberOfGroups.SemiGroup; i > 0; i--)
+            {
+                groupsToList[i].Name =
+                    i / howManySemiGroupsAreInAGroup + 1 + "." + (i % howManySemiGroupsAreInAGroup + 1);
+                groupsToList[i].Group = i / howManySemiGroupsAreInAGroup + 1;
+            }
+
+            _dbContext.StudyYearGroups.UpdateRange(groupsToList);
+        }
+
+        if (studyYearNumberOfGroups.SemiGroup < numberOfSemiGroups)
+        {
+            for (var i = studyYearNumberOfGroups.SemiGroup; i < numberOfSemiGroups; i++)
+            {
+                semiGroup.Add(new StudyYearGroup
+                {
+                    SemiGroup = i + 1,
+                    Group = i / howManySemiGroupsAreInAGroup + 1,
+                    Name = i / howManySemiGroupsAreInAGroup + 1 + "." + (i % howManySemiGroupsAreInAGroup + 1),
+                    StudyProgramYearId = studyProgramId
+                });
+            }
+
+            await _dbContext.StudyYearGroups.AddRangeAsync(semiGroup);
+            groupsToList.AddRange(semiGroup);
+        }
+
+        if (studyYearNumberOfGroups.SemiGroup > numberOfSemiGroups)
+        {
+            var rangeToRemove = groupsToList.GetRange(numberOfSemiGroups + 1,
+                groupsToList.Count);
+            _dbContext.StudyYearGroups.RemoveRange(rangeToRemove);
+            groupsToList.RemoveRange(numberOfSemiGroups + 1,
+                groupsToList.Count);
+        }
+
+        response.Item = groupsToList;
+        await _dbContext.SaveChangesAsync();
+
+
+        return response;
     }
 
-    public Task<ActionResponse> DeleteStudyYearGroup(Guid studyProgramId)
+    public async Task<ActionResponse> DeleteStudyYearGroup(Guid studyProgramId)
     {
-        throw new NotImplementedException();
+        var response = new ActionResponse();
+
+        var groupsToDelete = await _dbContext.StudyYearGroups.Where(s => s.StudyProgramYearId == studyProgramId)
+            .ToListAsync();
+        if (groupsToDelete.Count == 0)
+        {
+            response.AddError("Student program doesn't exist");
+            return response;
+        }
+
+        _dbContext.StudyYearGroups.RemoveRange(groupsToDelete);
+        await _dbContext.SaveChangesAsync();
+        return response;
     }
 
-    public Task SaveStudyYearGroup()
+    public async Task SaveStudyYearGroup()
     {
-        throw new NotImplementedException();
+        await _dbContext.SaveChangesAsync();
     }
 }

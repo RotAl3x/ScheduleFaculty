@@ -1,6 +1,7 @@
 using AutoMapper;
 using ScheduleFaculty.Api.DTOs;
 using ScheduleFaculty.Core.Entities;
+using ScheduleFaculty.Core.Utils;
 
 namespace ScheduleFaculty.API.Utils;
 
@@ -11,5 +12,6 @@ public class MappingProfile : Profile
         CreateMap<Classroom, ClassroomDto>().ReverseMap();
         CreateMap<StudyProgram, StudyProgramDto>().ReverseMap();
         CreateMap<StudyYearGroup, StudyYearGroupDto>().ReverseMap();
+        CreateMap<TotalGroups,TotalGroupDto>().ReverseMap();
     }
 }
