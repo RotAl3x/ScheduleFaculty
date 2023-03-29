@@ -10,5 +10,6 @@ public class MappingProfile : Profile
     {
         CreateMap<Classroom, ClassroomDto>().ReverseMap();
         CreateMap<StudyProgram, StudyProgramDto>().ReverseMap();
+        CreateMap<StudyYearGroup, StudyYearGroupDto>().ReverseMap();
     }
 }
