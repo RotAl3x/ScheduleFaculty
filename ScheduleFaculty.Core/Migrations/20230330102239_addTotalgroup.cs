@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ScheduleFaculty.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class FIrst : Migration
+    public partial class addTotalgroup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,6 +53,32 @@ namespace ScheduleFaculty.Core.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Classrooms",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    DaysOfWeek = table.Column<int[]>(type: "integer[]", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Classrooms", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudyPrograms",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Year = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudyPrograms", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,6 +187,47 @@ namespace ScheduleFaculty.Core.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "NumberOfGroupsOfYears",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    StudyProgramYearId = table.Column<Guid>(type: "uuid", nullable: false),
+                    NumberOfSemiGroups = table.Column<int>(type: "integer", nullable: false),
+                    HowManySemiGroupsAreInAGroup = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NumberOfGroupsOfYears", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NumberOfGroupsOfYears_StudyPrograms_StudyProgramYearId",
+                        column: x => x.StudyProgramYearId,
+                        principalTable: "StudyPrograms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudyYearGroups",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    SemiGroup = table.Column<int>(type: "integer", nullable: false),
+                    Group = table.Column<int>(type: "integer", nullable: false),
+                    StudyProgramYearId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudyYearGroups", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudyYearGroups_StudyPrograms_StudyProgramYearId",
+                        column: x => x.StudyProgramYearId,
+                        principalTable: "StudyPrograms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -197,6 +264,16 @@ namespace ScheduleFaculty.Core.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NumberOfGroupsOfYears_StudyProgramYearId",
+                table: "NumberOfGroupsOfYears",
+                column: "StudyProgramYearId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudyYearGroups_StudyProgramYearId",
+                table: "StudyYearGroups",
+                column: "StudyProgramYearId");
         }
 
         /// <inheritdoc />
@@ -218,10 +295,22 @@ namespace ScheduleFaculty.Core.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Classrooms");
+
+            migrationBuilder.DropTable(
+                name: "NumberOfGroupsOfYears");
+
+            migrationBuilder.DropTable(
+                name: "StudyYearGroups");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "StudyPrograms");
         }
     }
 }

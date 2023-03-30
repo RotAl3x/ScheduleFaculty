@@ -11,6 +11,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<StudyProgram> StudyPrograms { get; set; }
     
     public DbSet<StudyYearGroup> StudyYearGroups { get; set; }
+    
+    public DbSet<NumberOfGroupsOfYear> NumberOfGroupsOfYears { get; set; } 
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {

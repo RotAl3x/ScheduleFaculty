@@ -1,7 +1,9 @@
+using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.EntityFrameworkCore;
 using ScheduleFaculty.Core.Database;
 using ScheduleFaculty.Core.Entities;
+using ScheduleFaculty.Core.Migrations;
 using ScheduleFaculty.Core.Services.Abstractions;
 using ScheduleFaculty.Core.Utils;
 
@@ -23,7 +25,7 @@ public class StudyYearGroupRepository : IStudyYearGroupRepository
             .ToListAsync();
         if (studyYearGroup.Count == 0)
         {
-            response.AddError("Student program doesn't exist");
+            response.AddError("Student program doesn't have groups");
             return response;
         }
 
@@ -31,25 +33,18 @@ public class StudyYearGroupRepository : IStudyYearGroupRepository
         return response;
     }
 
-    public async Task<ActionResponse<TotalGroups>> GetStudyYearNumberOfGroups(Guid studyProgramId)
+    public async Task<ActionResponse<NumberOfGroupsOfYear>> GetStudyYearNumberOfGroups(Guid studyProgramId)
     {
-        var response = new ActionResponse<TotalGroups>();
-        var studyYearNumberOfGroups = await _dbContext.StudyYearGroups.OrderByDescending(s => s.SemiGroup)
-            .FirstOrDefaultAsync(s => s.StudyProgramYearId == studyProgramId);
-        if (studyYearNumberOfGroups is null)
+        var response = new ActionResponse<NumberOfGroupsOfYear>();
+        var numberOfGroups =
+            await _dbContext.NumberOfGroupsOfYears.SingleOrDefaultAsync(n => n.StudyProgramYearId == studyProgramId);
+        if (numberOfGroups is null)
         {
-            response.AddError("Student program doesn't exist");
+            response.AddError("Student program doesn't have groups");
             return response;
         }
 
-        var totalGroup = new TotalGroups
-        {
-            StudyProgramId = studyProgramId,
-            NumberOfSemiGroups = studyYearNumberOfGroups.SemiGroup,
-            HowManySemiGroupsAreInAGroup = (studyYearNumberOfGroups.SemiGroup - 1) / studyYearNumberOfGroups.Group + 1
-        };
-
-        response.Item = totalGroup;
+        response.Item = numberOfGroups;
         return response;
     }
 
@@ -66,6 +61,23 @@ public class StudyYearGroupRepository : IStudyYearGroupRepository
             response.AddError("Study program have groups");
             return response;
         }
+
+        var hasMaxGroups =
+            await _dbContext.NumberOfGroupsOfYears.SingleOrDefaultAsync(n => n.StudyProgramYearId == studyProgramId);
+        if (studyProgramHasGroups)
+        {
+            response.AddError("Study program have max groups");
+            return response;
+        }
+
+        var maxGroups = new NumberOfGroupsOfYear
+        {
+            NumberOfSemiGroups = numberOfSemiGroups,
+            HowManySemiGroupsAreInAGroup = howManySemiGroupsAreInAGroup,
+            StudyProgramYearId = studyProgramId
+        };
+
+        await _dbContext.NumberOfGroupsOfYears.AddAsync(maxGroups);
 
         var semiGroup = new List<StudyYearGroup>();
 
@@ -91,60 +103,61 @@ public class StudyYearGroupRepository : IStudyYearGroupRepository
         int howManySemiGroupsAreInAGroup)
     {
         var response = new ActionResponse<List<StudyYearGroup>>();
-        var studyYearNumberOfGroupsEntity = _dbContext.StudyYearGroups.OrderByDescending(s => s.SemiGroup);
-        var studyYearNumberOfGroups =
-            await studyYearNumberOfGroupsEntity.FirstOrDefaultAsync(s => s.StudyProgramYearId == studyProgramId);
-        var groupsToList = await studyYearNumberOfGroupsEntity.ToListAsync();
-        if (studyYearNumberOfGroups is null)
+        var hasMaxGroups =
+            await _dbContext.NumberOfGroupsOfYears.SingleOrDefaultAsync(n => n.StudyProgramYearId == studyProgramId);
+
+        var studyYearGroups = await _dbContext.StudyYearGroups
+            .Where(s => s.StudyProgramYearId == studyProgramId).OrderBy(s => s.SemiGroup).ToListAsync();
+        if (studyYearGroups.Count==0)
         {
-            response.AddError("Student program doesn't exist");
+            response.AddError("Student program doesn't have groups");
             return response;
         }
 
-
-        var semiGroup = new List<StudyYearGroup>();
-        if (howManySemiGroupsAreInAGroup != ((studyYearNumberOfGroups.SemiGroup - 1) / studyYearNumberOfGroups.Group + 1))
+        if (hasMaxGroups is null)
         {
-            for (var i = studyYearNumberOfGroups.SemiGroup; i > 0; i--)
-            {
-                groupsToList[i].Name =
-                    i / howManySemiGroupsAreInAGroup + 1 + "." + (i % howManySemiGroupsAreInAGroup + 1);
-                groupsToList[i].Group = i / howManySemiGroupsAreInAGroup + 1;
-            }
-
-            _dbContext.StudyYearGroups.UpdateRange(groupsToList);
+            response.AddError("Student program doesn't have groups");
+            return response;
         }
 
-        if (studyYearNumberOfGroups.SemiGroup < numberOfSemiGroups)
+        var semiGroupToAdd = new List<StudyYearGroup>();
+        
+        if (hasMaxGroups.HowManySemiGroupsAreInAGroup != howManySemiGroupsAreInAGroup)
         {
-            for (var i = studyYearNumberOfGroups.SemiGroup; i < numberOfSemiGroups; i++)
+            for (var i = 0; i < hasMaxGroups.NumberOfSemiGroups; i++)
             {
-                semiGroup.Add(new StudyYearGroup
+                studyYearGroups[i].Name =
+                    i / howManySemiGroupsAreInAGroup + 1 + "." + (i % howManySemiGroupsAreInAGroup + 1);
+                studyYearGroups[i].Group = i / howManySemiGroupsAreInAGroup + 1;
+            }
+        }
+        
+        if (hasMaxGroups.NumberOfSemiGroups < numberOfSemiGroups)
+        {
+            for (var i = hasMaxGroups.NumberOfSemiGroups; i < numberOfSemiGroups; i++)
+            {
+                semiGroupToAdd.Add(new StudyYearGroup
                 {
-                    SemiGroup = i + 1,
+                    SemiGroup = i+1 ,
                     Group = i / howManySemiGroupsAreInAGroup + 1,
                     Name = i / howManySemiGroupsAreInAGroup + 1 + "." + (i % howManySemiGroupsAreInAGroup + 1),
                     StudyProgramYearId = studyProgramId
                 });
             }
-
-            await _dbContext.StudyYearGroups.AddRangeAsync(semiGroup);
-            groupsToList.AddRange(semiGroup);
+            await _dbContext.StudyYearGroups.AddRangeAsync(semiGroupToAdd);
         }
 
-        if (studyYearNumberOfGroups.SemiGroup > numberOfSemiGroups)
+        if (hasMaxGroups.NumberOfSemiGroups > numberOfSemiGroups)
         {
-            var rangeToRemove = groupsToList.GetRange(numberOfSemiGroups + 1,
-                groupsToList.Count);
-            _dbContext.StudyYearGroups.RemoveRange(rangeToRemove);
-            groupsToList.RemoveRange(numberOfSemiGroups + 1,
-                groupsToList.Count);
+            _dbContext.StudyYearGroups.RemoveRange(studyYearGroups.GetRange(numberOfSemiGroups,hasMaxGroups.NumberOfSemiGroups- numberOfSemiGroups));
         }
 
-        response.Item = groupsToList;
+        hasMaxGroups.NumberOfSemiGroups = numberOfSemiGroups;
+        hasMaxGroups.HowManySemiGroupsAreInAGroup = howManySemiGroupsAreInAGroup;
+        
         await _dbContext.SaveChangesAsync();
 
-
+        response.Item = studyYearGroups;
         return response;
     }
 

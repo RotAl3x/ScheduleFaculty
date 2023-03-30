@@ -255,6 +255,28 @@ namespace ScheduleFaculty.Core.Migrations
                     b.ToTable("Classrooms");
                 });
 
+            modelBuilder.Entity("ScheduleFaculty.Core.Entities.NumberOfGroupsOfYear", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("HowManySemiGroupsAreInAGroup")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("NumberOfSemiGroups")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("StudyProgramYearId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudyProgramYearId");
+
+                    b.ToTable("NumberOfGroupsOfYears");
+                });
+
             modelBuilder.Entity("ScheduleFaculty.Core.Entities.StudyProgram", b =>
                 {
                     b.Property<Guid>("Id")
@@ -348,6 +370,17 @@ namespace ScheduleFaculty.Core.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ScheduleFaculty.Core.Entities.NumberOfGroupsOfYear", b =>
+                {
+                    b.HasOne("ScheduleFaculty.Core.Entities.StudyProgram", "Program")
+                        .WithMany()
+                        .HasForeignKey("StudyProgramYearId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Program");
                 });
 
             modelBuilder.Entity("ScheduleFaculty.Core.Entities.StudyYearGroup", b =>
