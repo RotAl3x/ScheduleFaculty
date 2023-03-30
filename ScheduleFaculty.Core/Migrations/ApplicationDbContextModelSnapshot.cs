@@ -255,6 +255,28 @@ namespace ScheduleFaculty.Core.Migrations
                     b.ToTable("Classrooms");
                 });
 
+            modelBuilder.Entity("ScheduleFaculty.Core.Entities.NumberOfGroupsOfYear", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("HowManySemiGroupsAreInAGroup")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("NumberOfSemiGroups")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("StudyProgramYearId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudyProgramYearId");
+
+                    b.ToTable("NumberOfGroupsOfYears");
+                });
+
             modelBuilder.Entity("ScheduleFaculty.Core.Entities.StudyProgram", b =>
                 {
                     b.Property<Guid>("Id")
@@ -271,6 +293,32 @@ namespace ScheduleFaculty.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StudyPrograms");
+                });
+
+            modelBuilder.Entity("ScheduleFaculty.Core.Entities.StudyYearGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Group")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("SemiGroup")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("StudyProgramYearId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudyProgramYearId");
+
+                    b.ToTable("StudyYearGroups");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -322,6 +370,28 @@ namespace ScheduleFaculty.Core.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ScheduleFaculty.Core.Entities.NumberOfGroupsOfYear", b =>
+                {
+                    b.HasOne("ScheduleFaculty.Core.Entities.StudyProgram", "Program")
+                        .WithMany()
+                        .HasForeignKey("StudyProgramYearId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Program");
+                });
+
+            modelBuilder.Entity("ScheduleFaculty.Core.Entities.StudyYearGroup", b =>
+                {
+                    b.HasOne("ScheduleFaculty.Core.Entities.StudyProgram", "Program")
+                        .WithMany()
+                        .HasForeignKey("StudyProgramYearId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Program");
                 });
 #pragma warning restore 612, 618
         }
