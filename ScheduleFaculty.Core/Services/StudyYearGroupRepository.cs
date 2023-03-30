@@ -145,11 +145,13 @@ public class StudyYearGroupRepository : IStudyYearGroupRepository
                 });
             }
             await _dbContext.StudyYearGroups.AddRangeAsync(semiGroupToAdd);
+            studyYearGroups.AddRange(semiGroupToAdd);
         }
 
         if (hasMaxGroups.NumberOfSemiGroups > numberOfSemiGroups)
         {
             _dbContext.StudyYearGroups.RemoveRange(studyYearGroups.GetRange(numberOfSemiGroups,hasMaxGroups.NumberOfSemiGroups- numberOfSemiGroups));
+            studyYearGroups.RemoveRange(numberOfSemiGroups,hasMaxGroups.NumberOfSemiGroups- numberOfSemiGroups);
         }
 
         hasMaxGroups.NumberOfSemiGroups = numberOfSemiGroups;

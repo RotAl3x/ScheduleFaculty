@@ -21,10 +21,10 @@ public class GroupController : ControllerBase
         _studyYearGroupRepository = studyYearGroupRepository;
     }
     
-    [HttpGet("{id}")]
-    public async Task<ActionResult> GetStudyYearGroup([FromRoute] Guid id)
+    [HttpGet("{studyProgramId}")]
+    public async Task<ActionResult> GetStudyYearGroup([FromRoute] Guid studyProgramId)
     {
-        var studyYearGroup = await _studyYearGroupRepository.GetStudyYearGroup(id);
+        var studyYearGroup = await _studyYearGroupRepository.GetStudyYearGroup(studyProgramId);
         if (studyYearGroup.HasErrors())
         {
             return BadRequest(studyYearGroup.Errors);
@@ -34,10 +34,10 @@ public class GroupController : ControllerBase
         return Ok(response);
 
     } 
-    [HttpGet("numberOfGroups/{id}")]
-    public async Task<ActionResult> GetStudyYearNumberOfGroups([FromRoute] Guid id)
+    [HttpGet("numberOfGroups/{studyProgramId}")]
+    public async Task<ActionResult> GetStudyYearNumberOfGroups([FromRoute] Guid studyProgramId)
     {
-        var studyYearNumberOfGroups = await _studyYearGroupRepository.GetStudyYearNumberOfGroups(id);
+        var studyYearNumberOfGroups = await _studyYearGroupRepository.GetStudyYearNumberOfGroups(studyProgramId);
         if (studyYearNumberOfGroups.HasErrors())
         {
             return BadRequest(studyYearNumberOfGroups.Errors);
@@ -63,7 +63,7 @@ public class GroupController : ControllerBase
         return Ok(response);
     }
     
-    [HttpPatch("edit")]
+    [HttpPatch("editByStudyProgramId")]
     [Authorize(Roles = "Secretary",
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult> EditStudyYearGroup([FromBody] TotalGroupDto totalGroupDto)
@@ -78,12 +78,12 @@ public class GroupController : ControllerBase
         return Ok(response);
     }
     
-    [HttpDelete("delete/{id}")]
+    [HttpDelete("delete/{studyProgramId}")]
     [Authorize(Roles = "Secretary",
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult> DeleteStudyYearGroup([FromRoute] Guid id)
+    public async Task<ActionResult> DeleteStudyYearGroup([FromRoute] Guid studyProgramId)
     {
-        var studyYearGroup = await _studyYearGroupRepository.DeleteStudyYearGroup(id);
+        var studyYearGroup = await _studyYearGroupRepository.DeleteStudyYearGroup(studyProgramId);
         if (studyYearGroup.HasErrors())
         {
             return BadRequest(studyYearGroup.Errors);
