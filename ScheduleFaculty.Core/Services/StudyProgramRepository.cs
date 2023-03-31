@@ -39,7 +39,7 @@ public class StudyProgramRepository : IStudyProgramRepository
         return response;
     }
 
-    public async Task<ActionResponse<StudyProgram>> CreateStudyProgram(string name, int year)
+    public async Task<ActionResponse<StudyProgram>> CreateStudyProgram(string name, int year, int weeksInASemester)
     {
         var response = new ActionResponse<StudyProgram>();
 
@@ -51,7 +51,7 @@ public class StudyProgramRepository : IStudyProgramRepository
             return response;
         }
 
-        var studyProgram= new StudyProgram { Name = name, Year = year };
+        var studyProgram= new StudyProgram { Name = name, Year = year ,WeeksInASemester = weeksInASemester};
         var dbStudyProgram = await _dbContext.StudyPrograms.AddAsync(studyProgram);
         await _dbContext.SaveChangesAsync();
 
@@ -59,7 +59,7 @@ public class StudyProgramRepository : IStudyProgramRepository
         return response;
     }
 
-    public async Task<ActionResponse<StudyProgram>> EditStudyProgram(Guid id, string name, int year)
+    public async Task<ActionResponse<StudyProgram>> EditStudyProgram(Guid id, string name, int year, int weeksInASemester)
     {
         var response = new ActionResponse<StudyProgram>();
 
@@ -73,6 +73,7 @@ public class StudyProgramRepository : IStudyProgramRepository
 
         studyProgramToChange.Name = name;
         studyProgramToChange.Year = year;
+        studyProgramToChange.WeeksInASemester = weeksInASemester;
         await _dbContext.SaveChangesAsync();
         response.Item = studyProgramToChange;
         return response;

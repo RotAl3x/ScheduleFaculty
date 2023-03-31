@@ -7,7 +7,6 @@ using ScheduleFaculty.Core.Services.Abstractions;
 
 namespace ScheduleFaculty.Api.ApiControllers;
 
-
 [ApiController]
 [Route("/api/studyProgram")]
 public class StudyProgramController : ControllerBase
@@ -20,7 +19,7 @@ public class StudyProgramController : ControllerBase
         _studyProgramRepository = studyProgramRepository;
         _mapper = mapper;
     }
-    
+
     [HttpGet("{id}")]
     public async Task<ActionResult> GetStudyProgramById([FromRoute] Guid id)
     {
@@ -32,7 +31,6 @@ public class StudyProgramController : ControllerBase
 
         var response = _mapper.Map<StudyProgramDto>(studyProgram.Item);
         return Ok(response);
-
     }
 
     [HttpGet("getAll")]
@@ -49,7 +47,8 @@ public class StudyProgramController : ControllerBase
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult> CreateStudyProgram([FromBody] StudyProgramDto studyProgramDto)
     {
-        var studyProgram = await _studyProgramRepository.CreateStudyProgram(studyProgramDto.Name, studyProgramDto.Year);
+        var studyProgram = await _studyProgramRepository.CreateStudyProgram(studyProgramDto.Name, studyProgramDto.Year,
+            studyProgramDto.WeeksInASemester);
         if (studyProgram.HasErrors())
         {
             return BadRequest(studyProgram.Errors);
@@ -64,7 +63,8 @@ public class StudyProgramController : ControllerBase
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult> EditStudyProgram([FromBody] StudyProgramDto studyProgramDto)
     {
-        var studyProgram = await _studyProgramRepository.EditStudyProgram(studyProgramDto.Id,studyProgramDto.Name, studyProgramDto.Year);
+        var studyProgram = await _studyProgramRepository.EditStudyProgram(studyProgramDto.Id, studyProgramDto.Name,
+            studyProgramDto.Year, studyProgramDto.WeeksInASemester);
         if (studyProgram.HasErrors())
         {
             return BadRequest(studyProgram.Errors);
@@ -73,7 +73,7 @@ public class StudyProgramController : ControllerBase
         var response = _mapper.Map<StudyProgramDto>(studyProgram.Item);
         return Ok(response);
     }
-    
+
     [HttpDelete("delete/{id}")]
     [Authorize(Roles = "Secretary",
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -84,7 +84,7 @@ public class StudyProgramController : ControllerBase
         {
             return BadRequest(studyProgram.Errors);
         }
+
         return Ok();
     }
-
 }
