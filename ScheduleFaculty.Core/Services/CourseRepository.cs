@@ -30,7 +30,7 @@ public class CourseRepository : ICourseRepository
         return response;
     }
 
-    public async Task<ActionResponse<List<Course>>> GetCoursesByProfessorId(Guid professorId)
+    public async Task<ActionResponse<List<Course>>> GetCoursesByProfessorId(string professorId)
     {
         var response = new ActionResponse<List<Course>>();
         var courses = await _dbContext.Courses.Where(c => c.ProfessorUserId == professorId).ToListAsync();
@@ -57,7 +57,7 @@ public class CourseRepository : ICourseRepository
         return response;
     }
 
-    public async Task<ActionResponse<Course>> CreateCourse(Guid studyProgramId, Guid professorId, string name,
+    public async Task<ActionResponse<Course>> CreateCourse(Guid studyProgramId, string professorId, string name,
         string abbreviation, int semester,
         bool isOptional)
     {
@@ -79,11 +79,13 @@ public class CourseRepository : ICourseRepository
         return response;
     }
 
-    public async Task<ActionResponse<Course>> EditCourse(Course course)
+    public async Task<ActionResponse<Course>> EditCourse(Guid id,Guid studyProgramId, string professorId, string name,
+        string abbreviation, int semester,
+        bool isOptional)
     {
         var response = new ActionResponse<Course>();
 
-        var courseToEdit = await _dbContext.Courses.SingleOrDefaultAsync(c => c.Id == course.Id);
+        var courseToEdit = await _dbContext.Courses.SingleOrDefaultAsync(c => c.Id == id);
 
         if (courseToEdit is null)
         {
@@ -91,7 +93,12 @@ public class CourseRepository : ICourseRepository
             return response;
         }
 
-        courseToEdit = course;
+        courseToEdit.StudyProgramYearId = studyProgramId;
+        courseToEdit.ProfessorUserId = professorId;
+        courseToEdit.Name = name;
+        courseToEdit.Abbreviation = abbreviation;
+        courseToEdit.Semester = semester;
+        courseToEdit.IsOptional = isOptional;
         await _dbContext.SaveChangesAsync();
         response.Item = courseToEdit;
         return response;

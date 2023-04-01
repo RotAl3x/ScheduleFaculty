@@ -14,14 +14,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<NumberOfGroupsOfYear> NumberOfGroupsOfYears { get; set; }
 
-    public DbSet<Course> Courses { get; set; }//
+    public DbSet<Course> Courses { get; set; } //
 
-    public DbSet<HourType> HourTypes { get; set; }//
+    public DbSet<HourType> HourTypes { get; set; } //
 
- //   public DbSet<CourseHourType> CourseHourTypes { get; set; }
-    
+    public DbSet<CourseHourType> CourseHourTypes { get; set; } //
+
     public DbSet<Status> Statuses { get; set; }
-    
+
     //public DbSet<HourStudyOfAYear> HourStudyOfAYears { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

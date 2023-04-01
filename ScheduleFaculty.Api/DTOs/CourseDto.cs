@@ -6,7 +6,7 @@ public class CourseDto
     
     public Guid StudyProgramYearId { get; set; }
     
-    public Guid ProfessorUserId { get; set; }
+    public string ProfessorUserId { get; set; }
     
     public string Name { get; set; }
     

@@ -9,7 +9,7 @@ using ScheduleFaculty.Core.Services.Abstractions;
 namespace ScheduleFaculty.Api.ApiControllers;
 
 [ApiController]
-[Route("/api/classroom")]
+[Route("/api/course")]
 public class CourseController : ControllerBase
 {
     private readonly ICourseRepository _courseRepository;
@@ -35,7 +35,7 @@ public class CourseController : ControllerBase
     }
 
     [HttpGet("getByProfessorId/{id}")]
-    public async Task<ActionResult> GetCourseByProfessorId([FromRoute] Guid id)
+    public async Task<ActionResult> GetCourseByProfessorId([FromRoute] string id)
     {
         var course = await _courseRepository.GetCoursesByProfessorId(id);
         if (course.HasErrors())
@@ -92,9 +92,9 @@ public class CourseController : ControllerBase
     [HttpPatch("edit")]
     [Authorize(Roles = "Secretary",
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult> EditCourse([FromBody] Course courseDto)
+    public async Task<ActionResult> EditCourse([FromBody] CourseDto courseDto)
     {
-        var course = await _courseRepository.EditCourse(courseDto);
+        var course = await _courseRepository.EditCourse(courseDto.Id,courseDto.StudyProgramYearId,courseDto.ProfessorUserId,courseDto.Name,courseDto.Abbreviation,courseDto.Semester,courseDto.IsOptional);
         if (course.HasErrors())
         {
             return BadRequest(course.Errors);

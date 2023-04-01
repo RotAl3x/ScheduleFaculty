@@ -11,7 +11,7 @@ public class Course
     public StudyProgram StudyProgram { get; set; }
     
     [ForeignKey(("ProfessorUser"))]
-    public Guid ProfessorUserId { get; set; }
+    public string ProfessorUserId { get; set; }
     public ApplicationUser ProfessorUser { get; set; }
     
     public string Name { get; set; }

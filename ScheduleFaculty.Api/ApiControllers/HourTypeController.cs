@@ -46,9 +46,9 @@ public class HourTypeController: ControllerBase
     [HttpPost]
     [Authorize(Roles = "Secretary",
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult> CreateStatus([FromBody] string name,int semiGroupsPerHour,bool needAllSemiGroup)
+    public async Task<ActionResult> CreateStatus([FromBody] HourTypeDto hourTypeDto)
     {
-        var createHourType = await _hourTypeRepository.CreateHourType(name, semiGroupsPerHour, needAllSemiGroup);
+        var createHourType = await _hourTypeRepository.CreateHourType(hourTypeDto.Name, hourTypeDto.SemiGroupsPerHour, hourTypeDto.NeedAllSemiGroups);
         if (createHourType.HasErrors())
         {
             return BadRequest(createHourType.Errors);
@@ -84,7 +84,6 @@ public class HourTypeController: ControllerBase
             return BadRequest(deleteHourType.Errors);
         }
 
-        var response = _mapper.Map<HourTypeDto>(deleteHourType);
-        return Ok(response);
+        return Ok();
     }
 }
