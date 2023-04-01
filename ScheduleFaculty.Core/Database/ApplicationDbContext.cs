@@ -14,7 +14,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<NumberOfGroupsOfYear> NumberOfGroupsOfYears { get; set; }
 
-    //public DbSet<Course> Courses { get; set; }
+    public DbSet<Course> Courses { get; set; }//
 
     public DbSet<HourType> HourTypes { get; set; }//
 
