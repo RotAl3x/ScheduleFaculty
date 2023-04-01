@@ -17,6 +17,7 @@ public static class CoreSpecifications
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IStudyYearGroupRepository, StudyYearGroupRepository>();
         services.AddScoped<IStatusRepository, StatusRepository>();
+        services.AddScoped<IHourTypeRepository, HourTypeRepository>();
 
         return services;
     }

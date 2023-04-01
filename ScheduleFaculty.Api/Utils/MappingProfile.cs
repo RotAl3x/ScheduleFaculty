@@ -13,6 +13,6 @@ public class MappingProfile : Profile
         CreateMap<StudyProgram, StudyProgramDto>().ReverseMap();
         CreateMap<StudyYearGroup, StudyYearGroupDto>().ReverseMap();
         CreateMap<NumberOfGroupsOfYear,TotalGroupDto>().ReverseMap();
-        CreateMap<StatusDto, Status>().ReverseMap();
+        CreateMap<Status, StatusDto>().ReverseMap();
     }
 }

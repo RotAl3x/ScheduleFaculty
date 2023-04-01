@@ -16,7 +16,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     //public DbSet<Course> Courses { get; set; }
 
-   // public DbSet<HourType> HourTypes { get; set; }
+    public DbSet<HourType> HourTypes { get; set; }//
 
  //   public DbSet<CourseHourType> CourseHourTypes { get; set; }
     

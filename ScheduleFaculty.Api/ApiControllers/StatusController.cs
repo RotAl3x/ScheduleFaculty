@@ -23,7 +23,7 @@ public class StatusController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult> GetStatus([FromBody] Guid id)
+    public async Task<ActionResult> GetStatus([FromRoute] Guid id)
     {
         var status = await _statusRepository.GetStatus(id);
         if (status.HasErrors())

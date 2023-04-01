@@ -1,6 +1,6 @@
-namespace ScheduleFaculty.Core.Entities;
+namespace ScheduleFaculty.Api.DTOs;
 
-public class HourType
+public class HourTypeDto
 {
     public Guid Id { get; set; }
 
