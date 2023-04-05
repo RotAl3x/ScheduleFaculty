@@ -15,7 +15,7 @@ public class HourStudyOfAYear
     public CourseHourType CourseHourType { get; set; }
     
     [ForeignKey(("User"))] 
-    public Guid UserId { get; set; }
+    public string UserId { get; set; }
     public ApplicationUser User { get; set; }
     
     [ForeignKey(("Classroom"))] 
@@ -23,8 +23,7 @@ public class HourStudyOfAYear
     public Classroom Classroom { get; set; }
     
     public List<int> StudyWeeks { get; set; }
-
-
+    
     public DateTime StartTime { get; set; }
     
     public DateTime EndTime { get; set; }
