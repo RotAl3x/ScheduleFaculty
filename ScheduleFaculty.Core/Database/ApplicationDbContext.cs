@@ -22,7 +22,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Status> Statuses { get; set; }
 
-    //public DbSet<HourStudyOfAYear> HourStudyOfAYears { get; set; }
+    public DbSet<HourStudyOfAYear> HourStudyOfAYears { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {

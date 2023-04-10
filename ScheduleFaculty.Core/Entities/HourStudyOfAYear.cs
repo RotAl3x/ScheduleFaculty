@@ -24,6 +24,8 @@ public class HourStudyOfAYear
     
     public List<int> StudyWeeks { get; set; }
     
+    public DayOfWeek DayOfWeek { get; set; }
+    
     public DateTime StartTime { get; set; }
     
     public DateTime EndTime { get; set; }

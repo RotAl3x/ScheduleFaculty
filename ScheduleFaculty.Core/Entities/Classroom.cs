@@ -8,6 +8,6 @@ public class Classroom
     
     public string Name { get; set; }
     
-    public List<DaysOfWeek> DaysOfWeek{ get; set; }
+    public List<DayOfWeek> DaysOfWeek{ get; set; }
     
 }

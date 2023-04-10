@@ -19,8 +19,8 @@ public interface IHourStudyOfAYearRepository
 
     Task<ActionResponse<List<HourStudyOfAYear>>> GetAllHourStudyOfAYear();
 
-    Task<ActionResponse<HourStudyOfAYear>> CreateHourStudyOfAYear(Guid semiGroup, Guid courseHourTypeId, string userId,
-        Guid classroomId, List<int> studyWeeks, DateTime startTime, DateTime endTime);
+    Task<ActionResponse<HourStudyOfAYear>> CreateHourStudyOfAYear( Guid courseHourTypeId, string userId,
+        Guid classroomId, List<int> studyWeeks, DateTime startTime, DateTime endTime,bool searchForSemiGroupWithFreeHourAfterStudy);
 
     Task<ActionResponse<HourStudyOfAYear>> EditHourStudyOfAYear(Guid id, Guid semiGroup, Guid courseHourTypeId,
         string userId,
