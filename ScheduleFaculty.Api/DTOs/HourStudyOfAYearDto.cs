@@ -4,7 +4,7 @@ public class HourStudyOfAYearDto
 {
     public Guid Id { get; set; }
 
-    public Guid SemiGroupId { get; set; }
+    public List<Guid> SemiGroupsId { get; set; }
 
     public Guid CourseHourTypeId { get; set; }
 
@@ -14,7 +14,9 @@ public class HourStudyOfAYearDto
 
     public List<int> StudyWeeks { get; set; }
     
-    public DateTime StartTime { get; set; }
-
-    public DateTime EndTime { get; set; }
+    public DayOfWeek DayOfWeek { get; set; }
+    
+    public int StartTime { get; set; }
+    
+    public int EndTime { get; set; }
 }

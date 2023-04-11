@@ -81,7 +81,7 @@ public class StatusController : ControllerBase
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult> EditStatus([FromBody] StatusDto statusDto)
     {
-        var editStatus = await _statusRepository.EditStatus(statusDto.Id, statusDto.Name, statusDto.IsActive);
+        var editStatus = await _statusRepository.EditStatus(statusDto.Id, statusDto.Name, statusDto.IsActive, statusDto.Semester);
         if (editStatus.HasErrors())
         {
             return BadRequest(editStatus.Errors);

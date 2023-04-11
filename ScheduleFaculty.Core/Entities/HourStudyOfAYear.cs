@@ -7,7 +7,7 @@ public class HourStudyOfAYear
     public Guid Id { get; set; }
 
     [ForeignKey(("StudyYearGroup"))] 
-    public Guid SemiGroupId { get; set; }
+    public List<Guid> SemiGroupId { get; set; } = new List<Guid>();
     public StudyYearGroup StudyYearGroup { get; set; }
     
     [ForeignKey(("CourseHourType"))] 
@@ -26,9 +26,9 @@ public class HourStudyOfAYear
     
     public DayOfWeek DayOfWeek { get; set; }
     
-    public DateTime StartTime { get; set; }
+    public int StartTime { get; set; }
     
-    public DateTime EndTime { get; set; }
+    public int EndTime { get; set; }
     
     
 }

@@ -69,6 +69,7 @@ public class StatusRepository : IStatusRepository
         var status = new Status()
         {
             Name = name,
+            Semester = 1,
             IsActive = false,
         };
         var dbStatus = await _dbContext.Statuses.AddAsync(status);
@@ -77,7 +78,7 @@ public class StatusRepository : IStatusRepository
         return response;
     }
 
-    public async Task<ActionResponse<Status>> EditStatus(Guid id, string name, bool isActive)
+    public async Task<ActionResponse<Status>> EditStatus(Guid id, string name, bool isActive, int semester)
     {
         var response = new ActionResponse<Status>();
         var statusEntity = _dbContext.Statuses;
@@ -90,6 +91,12 @@ public class StatusRepository : IStatusRepository
             return response;
         }
 
+        if (semester > 2)
+        {
+            response.AddError("Semesters are only 1 or 2");
+            return response;
+        }
+
         foreach (var statusToFalse in allStatuses)
         {
             statusToFalse.IsActive = false;
@@ -97,6 +104,7 @@ public class StatusRepository : IStatusRepository
 
         status.IsActive = isActive;
         status.Name = name;
+        status.Semester = semester;
         await _dbContext.SaveChangesAsync();
 
         response.Item = status;
