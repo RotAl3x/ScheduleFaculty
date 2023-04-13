@@ -7,7 +7,7 @@ public interface IHourStudyOfAYearRepository
 {
     Task<ActionResponse<HourStudyOfAYear>> GetById(Guid id);
 
-    Task<ActionResponse<List<HourStudyOfAYear>>> GetByStudyYearGroupId(Guid semiGroupId);
+    Task<ActionResponse<List<HourStudyOfAYear>>> GetByStudyYearSemiGroupId(Guid semiGroupId);
 
     Task<ActionResponse<List<HourStudyOfAYear>>> GetByCourseId(Guid courseId);
 

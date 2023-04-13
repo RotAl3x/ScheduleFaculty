@@ -33,15 +33,40 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
         return response;
     }
 
-    public async Task<ActionResponse<List<HourStudyOfAYear>>> GetByStudyYearGroupId(Guid semiGroupId)
+    public async Task<ActionResponse<List<HourStudyOfAYear>>> GetByStudyYearSemiGroupId(Guid semiGroupId)
+    {
+        var response = new ActionResponse<List<HourStudyOfAYear>>();
+        var semiGroupsOfStudyHour =
+            await _dbContext.GroupsOfAStudyHour.Include(g=>g.HourStudyOfAYear)
+                .Where(g => g.SemiGroupId==semiGroupId).ToListAsync();
+
+        if (semiGroupsOfStudyHour.Count == 0)
+        {
+            response.AddError("This semigroup don't have a hour study");
+            return response;
+        }
+
+        var hourStudy = new List<HourStudyOfAYear>();
+
+        foreach (var hour in semiGroupsOfStudyHour)
+        {
+            hourStudy.Add(hour.HourStudyOfAYear);
+        }
+
+        response.Item = hourStudy;
+        return response;
+    }
+
+    public async Task<ActionResponse<List<HourStudyOfAYear>>> GetByCourseId(Guid courseId)
     {
         var response = new ActionResponse<List<HourStudyOfAYear>>();
         var hoursStudyOfAYear =
-            await _dbContext.HourStudyOfAYears.Where(h => h.SemiGroupId.Contains(semiGroupId)).ToListAsync();
+            await _dbContext.HourStudyOfAYears.Include(h => h.CourseHourType.Course)
+                .Where(h => h.CourseHourType.Course.Id == courseId).ToListAsync();
 
         if (hoursStudyOfAYear.Count == 0)
         {
-            response.AddError("This semigroup don't have a hour study");
+            response.AddError("This course don't have a hour study");
             return response;
         }
 
@@ -49,42 +74,62 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
         return response;
     }
 
-    public async Task<ActionResponse<List<HourStudyOfAYear>>> GetByCourseId(Guid courseId)
+    public async Task<ActionResponse<List<HourStudyOfAYear>>> GetByHourTypeId(Guid hourTypeId)
     {
-        throw new NotImplementedException();
-        // var response = new ActionResponse<List<HourStudyOfAYear>>();
-        // var courseHourType = await _dbContext.CourseHourTypes.SingleOrDefaultAsync()
-        //     var hoursStudyOfAYear =
-        //     // await _dbContext.HourStudyOfAYears.Where(h => h.SemiGroupId == semiGroupId).ToListAsync();
-        //
-        // if (hoursStudyOfAYear.Count == 0)
-        // {
-        //     response.AddError("This semigroup don't have a course");
-        //     return response;
-        // }
-        //
-        // response.Item = hoursStudyOfAYear;
-        // return response;
+        var response = new ActionResponse<List<HourStudyOfAYear>>();
+        var hoursStudyOfAYear =
+            await _dbContext.HourStudyOfAYears.Include(h => h.CourseHourType.HourType)
+                .Where(h => h.CourseHourType.HourType.Id == hourTypeId).ToListAsync();
+
+        if (hoursStudyOfAYear.Count == 0)
+        {
+            response.AddError("This course don't have a hour study");
+            return response;
+        }
+
+        response.Item = hoursStudyOfAYear;
+        return response;
     }
 
-    public Task<ActionResponse<List<HourStudyOfAYear>>> GetByHourTypeId(Guid hourTypeId)
+    public async Task<ActionResponse<List<HourStudyOfAYear>>> GetByUserId(string userId)
     {
-        throw new NotImplementedException();
+        var response = new ActionResponse<List<HourStudyOfAYear>>();
+        var hoursStudyOfAYear =
+            await _dbContext.HourStudyOfAYears.Where(h => h.UserId==userId).ToListAsync();
+
+        if (hoursStudyOfAYear.Count == 0)
+        {
+            response.AddError("This user don't have a hour study");
+            return response;
+        }
+
+        response.Item = hoursStudyOfAYear;
+        return response;
     }
 
-    public Task<ActionResponse<List<HourStudyOfAYear>>> GetByUserId(string userId)
+    public async Task<ActionResponse<List<HourStudyOfAYear>>> GetByClassroomId(Guid classroomId)
     {
-        throw new NotImplementedException();
+        var response = new ActionResponse<List<HourStudyOfAYear>>();
+        var hoursStudyOfAYear =
+            await _dbContext.HourStudyOfAYears.Where(h => h.ClassroomId==classroomId).ToListAsync();
+
+        if (hoursStudyOfAYear.Count == 0)
+        {
+            response.AddError("This classroom don't have a hour study");
+            return response;
+        }
+
+        response.Item = hoursStudyOfAYear;
+        return response;
     }
 
-    public Task<ActionResponse<List<HourStudyOfAYear>>> GetByClassroomId(Guid classroomId)
+    public async Task<ActionResponse<List<HourStudyOfAYear>>> GetAllHourStudyOfAYear()
     {
-        throw new NotImplementedException();
-    }
+        var response = new ActionResponse<List<HourStudyOfAYear>>();
+        var hoursStudyOfAYear = await _dbContext.HourStudyOfAYears.ToListAsync();
 
-    public Task<ActionResponse<List<HourStudyOfAYear>>> GetAllHourStudyOfAYear()
-    {
-        throw new NotImplementedException();
+        response.Item = hoursStudyOfAYear;
+        return response;
     }
 
     private async Task<ActionResponse> CheckClassroomIsFree(Guid classroomId, int startTime,
@@ -121,20 +166,21 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
     {
         var response = new ActionResponse();
 
-        var semigroupHour = await _dbContext.HourStudyOfAYears
-            .Include(h => h.CourseHourType.Course)
-            .Where(h => (h.SemiGroupId.Contains(semigroupId))
-                        && (h.DayOfWeek == dayOfWeek)
-                        && h.CourseHourType.Course.Semester == semester
-                        && !h.CourseHourType.Course.IsOptional
-                        && h.StudyWeeks.Intersect(studyWeeks).Any())
-            .OrderBy(h => h.StartTime).ToListAsync();
+        var semigroupHour = await _dbContext.GroupsOfAStudyHour
+            .Include(g=>g.HourStudyOfAYear)
+            .ThenInclude(h => h.CourseHourType.Course)
+            .Where(g => (g.SemiGroupId==semigroupId)
+                        && (g.HourStudyOfAYear.DayOfWeek == dayOfWeek)
+                        && g.HourStudyOfAYear.CourseHourType.Course.Semester == semester
+                        && !g.HourStudyOfAYear.CourseHourType.Course.IsOptional
+                        && g.HourStudyOfAYear.StudyWeeks.Intersect(studyWeeks).Any())
+            .OrderBy(g => g.HourStudyOfAYear.StartTime).ToListAsync();
 
 
         foreach (var hour in semigroupHour)
         {
-            if (((hour.StartTime <= startTime) && (hour.EndTime > startTime)) ||
-                ((hour.StartTime < endTime) && (hour.EndTime >= endTime)))
+            if (((hour.HourStudyOfAYear.StartTime <= startTime) && (hour.HourStudyOfAYear.EndTime > startTime)) ||
+                ((hour.HourStudyOfAYear.StartTime < endTime) && (hour.HourStudyOfAYear.EndTime >= endTime)))
             {
                 response.AddError("");
                 return response;
@@ -227,6 +273,7 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
 
         var dbAdd = new HourStudyOfAYear
         {
+            Id = Guid.NewGuid(),
             CourseHourTypeId = courseHourTypeId,
             UserId = userId,
             ClassroomId = classroomId,
@@ -239,9 +286,10 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
         
         if (!course.IsOptional)
         {
-            var hourStudyGuidSemigroupThatHaveCourseType = await _dbContext.HourStudyOfAYears
-                .Where(h => h.CourseHourTypeId == courseHourTypeId)
-                .SelectMany(h => h.SemiGroupId)
+            var hourStudyGuidSemigroupThatHaveCourseType = await _dbContext.GroupsOfAStudyHour
+                .Include(g=>g.HourStudyOfAYear)
+                .Where(g => g.HourStudyOfAYear.CourseHourTypeId == courseHourTypeId)
+                .Select(g => g.SemiGroupId)
                 .ToListAsync();
 
             var studyYearGroupsWithoutSemigroupsThatHaveCourseType = await _dbContext.StudyYearGroups
@@ -249,7 +297,6 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
                             && (!hourStudyGuidSemigroupThatHaveCourseType.Contains(s.Id)))
                 .ToListAsync();
             var semigroupOccupied = 0;
-            var dbAddSemigroups = new List<Guid>();
             foreach (var semigroup in studyYearGroupsWithoutSemigroupsThatHaveCourseType)
             {
                 if (semigroupOccupied < hourType.SemiGroupsPerHour)
@@ -260,7 +307,12 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
                     if (!(semigroupAdd.HasErrors()))
                     {
                         semigroupOccupied++;
-                        dbAddSemigroups.Add(semigroup.Id);
+                        var groupHourStudy = new GroupsOfAStudyHour
+                        {
+                            SemiGroupId = semigroup.Id,
+                            HourStudyOfAYearId = dbAdd.Id
+                        };
+                        await _dbContext.GroupsOfAStudyHour.AddAsync(groupHourStudy);
                     }
                     else
                     {
@@ -279,7 +331,6 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
                 return response;
             }
 
-            dbAdd.SemiGroupId = dbAddSemigroups;
             await _dbContext.HourStudyOfAYears.AddAsync(dbAdd);
 
             await _dbContext.SaveChangesAsync();

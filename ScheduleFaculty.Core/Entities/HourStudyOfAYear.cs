@@ -6,10 +6,6 @@ public class HourStudyOfAYear
 {
     public Guid Id { get; set; }
 
-    [ForeignKey(("StudyYearGroup"))] 
-    public List<Guid> SemiGroupId { get; set; } = new List<Guid>();
-    public StudyYearGroup StudyYearGroup { get; set; }
-    
     [ForeignKey(("CourseHourType"))] 
     public Guid CourseHourTypeId { get; set; }
     public CourseHourType CourseHourType { get; set; }

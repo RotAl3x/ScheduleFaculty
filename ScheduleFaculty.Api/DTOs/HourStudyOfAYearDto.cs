@@ -2,9 +2,9 @@ namespace ScheduleFaculty.Api.DTOs;
 
 public class HourStudyOfAYearDto
 {
-    public Guid Id { get; set; }
+    public Guid? Id { get; set; }
 
-    public List<Guid> SemiGroupsId { get; set; }
+    public List<Guid>? SemiGroupsId { get; set; }
 
     public Guid CourseHourTypeId { get; set; }
 
