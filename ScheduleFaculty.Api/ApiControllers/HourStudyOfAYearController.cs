@@ -112,8 +112,8 @@ public class HourStudyOfAYearController: ControllerBase
     }
     
     [HttpPost]
-    // [Authorize(Roles = "Secretary,Professor,LabAssistant",
-    //     AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Roles = "Secretary,Professor,LabAssistant",
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult> CreateStatus([FromBody] HourStudyOfAYearDto hourStudyOfAYearDto)
     {
         var createHourStudy = await _hourStudyOfAYearRepository.CreateHourStudyOfAYear(
