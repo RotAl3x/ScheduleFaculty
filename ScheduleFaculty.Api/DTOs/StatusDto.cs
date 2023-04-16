@@ -6,5 +6,7 @@ public class StatusDto
     
     public string Name { get; set; }
     
+    public int Semester { get; set; }
+    
     public bool IsActive { get; set; }
 }

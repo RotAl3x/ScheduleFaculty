@@ -13,7 +13,7 @@ public interface IStatusRepository
 
     Task<ActionResponse<Status>> CreateStatus(string name);
 
-    Task<ActionResponse<Status>> EditStatus(Guid id, string name, bool isActive);
+    Task<ActionResponse<Status>> EditStatus(Guid id, string name, bool isActive, int semester);
 
     Task<ActionResponse> DeleteStatus(Guid id);
 }

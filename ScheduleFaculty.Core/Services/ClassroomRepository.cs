@@ -40,7 +40,7 @@ public class ClassroomRepository : IClassroomRepository
         return response;
     }
 
-    public async Task<ActionResponse<Classroom>> CreateClassroom(string name, List<DaysOfWeek> freeDays)
+    public async Task<ActionResponse<Classroom>> CreateClassroom(string name, List<DayOfWeek> freeDays)
     {
         var response = new ActionResponse<Classroom>();
 
@@ -60,7 +60,7 @@ public class ClassroomRepository : IClassroomRepository
         return response;
     }
 
-    public async Task<ActionResponse<Classroom>> EditClassroom(Guid id, string name, List<DaysOfWeek> freeDays)
+    public async Task<ActionResponse<Classroom>> EditClassroom(Guid id, string name, List<DayOfWeek> freeDays)
     {
         var response = new ActionResponse<Classroom>();
 

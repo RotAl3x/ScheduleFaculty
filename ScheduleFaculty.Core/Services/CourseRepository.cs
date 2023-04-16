@@ -62,6 +62,11 @@ public class CourseRepository : ICourseRepository
         bool isOptional)
     {
         var response = new ActionResponse<Course>();
+        if (semester > 2)
+        {
+            response.AddError("Semesters are 1 or 2");
+            return response;
+        }
 
         var course = new Course
         {
@@ -90,6 +95,11 @@ public class CourseRepository : ICourseRepository
         if (courseToEdit is null)
         {
             response.AddError("Course doesn't exist");
+            return response;
+        }
+        if (semester > 2)
+        {
+            response.AddError("Semesters are 1 or 2");
             return response;
         }
 
