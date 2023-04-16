@@ -19,7 +19,7 @@ public interface IHourStudyOfAYearRepository
 
     Task<ActionResponse<List<HourStudyOfAYear>>> GetAllHourStudyOfAYear();
 
-    Task<ActionResponse<List<HourStudyOfAYear>>> CreateHourStudyOfAYear( Guid courseHourTypeId,
+    Task<ActionResponse<HourStudyOfAYear>> CreateHourStudyOfAYear( Guid courseHourTypeId,
         string userId,
         Guid classroomId, List<int> studyWeeks, int startTime,
         int endTime, DayOfWeek dayOfWeek);

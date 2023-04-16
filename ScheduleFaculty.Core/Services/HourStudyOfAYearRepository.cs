@@ -11,11 +11,14 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ICheckAvailabilityService _checkAvailability;
 
-    public HourStudyOfAYearRepository(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
+    public HourStudyOfAYearRepository(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager,
+        ICheckAvailabilityService checkAvailability)
     {
         _dbContext = dbContext;
         _userManager = userManager;
+        _checkAvailability = checkAvailability;
     }
 
     public async Task<ActionResponse<HourStudyOfAYear>> GetById(Guid id)
@@ -37,8 +40,8 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
     {
         var response = new ActionResponse<List<HourStudyOfAYear>>();
         var semiGroupsOfStudyHour =
-            await _dbContext.GroupsOfAStudyHour.Include(g=>g.HourStudyOfAYear)
-                .Where(g => g.SemiGroupId==semiGroupId).ToListAsync();
+            await _dbContext.GroupsOfAStudyHour.Include(g => g.HourStudyOfAYear)
+                .Where(g => g.SemiGroupId == semiGroupId).ToListAsync();
 
         if (semiGroupsOfStudyHour.Count == 0)
         {
@@ -95,7 +98,7 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
     {
         var response = new ActionResponse<List<HourStudyOfAYear>>();
         var hoursStudyOfAYear =
-            await _dbContext.HourStudyOfAYears.Where(h => h.UserId==userId).ToListAsync();
+            await _dbContext.HourStudyOfAYears.Where(h => h.UserId == userId).ToListAsync();
 
         if (hoursStudyOfAYear.Count == 0)
         {
@@ -111,7 +114,7 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
     {
         var response = new ActionResponse<List<HourStudyOfAYear>>();
         var hoursStudyOfAYear =
-            await _dbContext.HourStudyOfAYears.Where(h => h.ClassroomId==classroomId).ToListAsync();
+            await _dbContext.HourStudyOfAYears.Where(h => h.ClassroomId == classroomId).ToListAsync();
 
         if (hoursStudyOfAYear.Count == 0)
         {
@@ -132,70 +135,12 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
         return response;
     }
 
-    private async Task<ActionResponse> CheckClassroomIsFree(Guid classroomId, int startTime,
-        int endTime, DayOfWeek dayOfWeek,
-        List<int> studyWeeks, int semester)
-    {
-        var response = new ActionResponse();
-        var classroomHour = await _dbContext.HourStudyOfAYears
-            .Include(h => h.CourseHourType.Course)
-            .Where(h => (h.ClassroomId == classroomId)
-                        && (h.DayOfWeek == dayOfWeek)
-                        && h.CourseHourType.Course.Semester == semester
-                        && h.StudyWeeks.Intersect(studyWeeks).Any())
-            .OrderBy(h => h.StartTime).ToListAsync();
-
-
-        foreach (var hour in classroomHour)
-        {
-            if (((hour.StartTime <= startTime) && (hour.EndTime > startTime)) ||
-                ((hour.StartTime < endTime) && (hour.EndTime >= endTime)))
-            {
-                var occupiedWeeks = string.Join(", ", hour.StudyWeeks.Intersect(studyWeeks));
-                response.AddError("Classroom is occupied in weeks: " + occupiedWeeks);
-                return response;
-            }
-        }
-
-        return response;
-    }
-
-    private async Task<ActionResponse> CheckIfSemigroupIsFree(Guid semigroupId, int startTime,
-        int endTime, DayOfWeek dayOfWeek,
-        List<int> studyWeeks, int semester)
-    {
-        var response = new ActionResponse();
-
-        var semigroupHour = await _dbContext.GroupsOfAStudyHour
-            .Include(g=>g.HourStudyOfAYear)
-            .ThenInclude(h => h.CourseHourType.Course)
-            .Where(g => (g.SemiGroupId==semigroupId)
-                        && (g.HourStudyOfAYear.DayOfWeek == dayOfWeek)
-                        && g.HourStudyOfAYear.CourseHourType.Course.Semester == semester
-                        && !g.HourStudyOfAYear.CourseHourType.Course.IsOptional
-                        && g.HourStudyOfAYear.StudyWeeks.Intersect(studyWeeks).Any())
-            .OrderBy(g => g.HourStudyOfAYear.StartTime).ToListAsync();
-
-
-        foreach (var hour in semigroupHour)
-        {
-            if (((hour.HourStudyOfAYear.StartTime <= startTime) && (hour.HourStudyOfAYear.EndTime > startTime)) ||
-                ((hour.HourStudyOfAYear.StartTime < endTime) && (hour.HourStudyOfAYear.EndTime >= endTime)))
-            {
-                response.AddError("");
-                return response;
-            }
-        }
-
-        return response;
-    }
-
-    public async Task<ActionResponse<List<HourStudyOfAYear>>> CreateHourStudyOfAYear(Guid courseHourTypeId,
+    public async Task<ActionResponse<HourStudyOfAYear>> CreateHourStudyOfAYear(Guid courseHourTypeId,
         string userId,
         Guid classroomId, List<int> studyWeeks, int startTime,
         int endTime, DayOfWeek dayOfWeek)
     {
-        var response = new ActionResponse<List<HourStudyOfAYear>>();
+        var response = new ActionResponse<HourStudyOfAYear>();
         if (startTime >= 24 || endTime >= 24)
         {
             response.AddError("A day have max 24 hours");
@@ -206,19 +151,6 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
         if (user is null)
         {
             response.AddError("User does not exist!");
-            return response;
-        }
-
-        var classroom = await _dbContext.Classrooms.SingleOrDefaultAsync(c => c.Id == classroomId);
-        if (classroom is null)
-        {
-            response.AddError("Classroom doesn't exist");
-            return response;
-        }
-
-        if (!classroom.DaysOfWeek.Contains(dayOfWeek))
-        {
-            response.AddError("Classroom is not free in that day");
             return response;
         }
 
@@ -243,7 +175,7 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
         var course = courseHourType.Course;
         var studyProgram = course.StudyProgram;
         var hourType = courseHourType.HourType;
-        
+
         if (studyWeeks.Max() > studyProgram.WeeksInASemester)
         {
             response.AddError("Study weeks are more than weeks in a semester");
@@ -251,7 +183,7 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
         }
 
         var activeStatus = await _dbContext.Statuses.SingleOrDefaultAsync(s => s.IsActive == true);
-        if (activeStatus is null||activeStatus.Name is "Course" or "NoEditable")
+        if (activeStatus is null || activeStatus.Name is "Course" or "NoEditable")
         {
             response.AddError("It's not period!");
             return response;
@@ -263,15 +195,38 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
             return response;
         }
 
+        var classroom = await _dbContext.Classrooms.SingleOrDefaultAsync(c => c.Id == classroomId);
+        if (classroom is null)
+        {
+            response.AddError("Classroom doesn't exist");
+            return response;
+        }
+
+        if (!classroom.DaysOfWeek.Contains(dayOfWeek))
+        {
+            response.AddError("Classroom is not free in that day");
+            return response;
+        }
+
         var checkTermOfClassroom =
-            await CheckClassroomIsFree(classroomId, startTime, endTime, dayOfWeek, studyWeeks, course.Semester);
+            await _checkAvailability.ForClassroom(classroomId, startTime, endTime, dayOfWeek, studyWeeks,
+                course.Semester);
         if (checkTermOfClassroom.HasErrors())
         {
             response.AddError(checkTermOfClassroom.Errors[0]);
             return response;
         }
 
-        var dbAdd = new HourStudyOfAYear
+        var semigroupsAvailable =
+            await _checkAvailability.AvailableSemigroups(courseHourTypeId, startTime, endTime, dayOfWeek, studyWeeks);
+
+        if (semigroupsAvailable.HasErrors())
+        {
+            response.AddError(semigroupsAvailable.Errors[0]);
+            return response;
+        }
+
+        var dbAddHourStudyOfAYear = new HourStudyOfAYear
         {
             Id = Guid.NewGuid(),
             CourseHourTypeId = courseHourTypeId,
@@ -282,85 +237,26 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
             StartTime = startTime,
             EndTime = endTime,
         };
-        
-        
-        if (!course.IsOptional)
-        {
-            var hourStudyGuidSemigroupThatHaveCourseType = await _dbContext.GroupsOfAStudyHour
-                .Include(g=>g.HourStudyOfAYear)
-                .Where(g => g.HourStudyOfAYear.CourseHourTypeId == courseHourTypeId)
-                .Select(g => g.SemiGroupId)
-                .ToListAsync();
 
-            var studyYearGroupsWithoutSemigroupsThatHaveCourseType = await _dbContext.StudyYearGroups
-                .Where(s => (s.StudyProgramYearId == studyProgram.Id)
-                            && (!hourStudyGuidSemigroupThatHaveCourseType.Contains(s.Id)))
-                .ToListAsync();
-            var semigroupOccupied = 0;
-            foreach (var semigroup in studyYearGroupsWithoutSemigroupsThatHaveCourseType)
+        await _dbContext.HourStudyOfAYears.AddAsync(dbAddHourStudyOfAYear);
+
+        if (semigroupsAvailable.Item.Any())
+        {
+            foreach (var semigroup in semigroupsAvailable.Item)
             {
-                if (semigroupOccupied < hourType.SemiGroupsPerHour)
+                var dbSemigroupToAdd = new GroupsOfAStudyHour
                 {
-                    var semigroupAdd =
-                        await CheckIfSemigroupIsFree(semigroup.Id, startTime, endTime, dayOfWeek, studyWeeks,
-                            course.Semester);
-                    if (!(semigroupAdd.HasErrors()))
-                    {
-                        semigroupOccupied++;
-                        var groupHourStudy = new GroupsOfAStudyHour
-                        {
-                            SemiGroupId = semigroup.Id,
-                            HourStudyOfAYearId = dbAdd.Id
-                        };
-                        await _dbContext.GroupsOfAStudyHour.AddAsync(groupHourStudy);
-                    }
-                    else
-                    {
-                        if (hourType.NeedAllSemiGroups)
-                        {
-                            response.AddError("Insufficient semigroups");
-                            return response;
-                        }
-                    }
-                }
-            }
-
-            if (semigroupOccupied < hourType.SemiGroupsPerHour)
-            {
-                response.AddError("Insufficient semigroups");
-                return response;
-            }
-
-            await _dbContext.HourStudyOfAYears.AddAsync(dbAdd);
-
-            await _dbContext.SaveChangesAsync();
-            return response;
-        }
-
-        var hoursCoursesNotOptional = await _dbContext.HourStudyOfAYears
-            .Include(h=>h.CourseHourType.HourType)
-            .Include(h=>h.CourseHourType.Course)
-            .Where(h => (!h.CourseHourType.Course.IsOptional)
-                        && h.CourseHourType.HourType.NeedAllSemiGroups
-                        && h.DayOfWeek==dayOfWeek
-                        && h.CourseHourType.Course.Semester == course.Semester
-                        && h.StudyWeeks.Intersect(studyWeeks).Any()
-                        && h.CourseHourType.Course.StudyProgramYearId == studyProgram.Id)
-            .ToListAsync();
-        foreach (var hour in hoursCoursesNotOptional)
-        {
-            if (((hour.StartTime <= startTime) && (hour.EndTime > startTime)) ||
-                ((hour.StartTime < endTime) && (hour.EndTime >= endTime)))
-            {
-                var occupiedWeeks = string.Join(", ", hour.StudyWeeks.Intersect(studyWeeks));
-                response.AddError("This year is occupied in weeks: " + occupiedWeeks);
-                return response;
+                    HourStudyOfAYearId = dbAddHourStudyOfAYear.Id,
+                    SemiGroupId = semigroup
+                };
+                await _dbContext.GroupsOfAStudyHour.AddAsync(dbSemigroupToAdd);
             }
         }
-        
-        await _dbContext.HourStudyOfAYears.AddAsync(dbAdd);
 
         await _dbContext.SaveChangesAsync();
+        response.Item = dbAddHourStudyOfAYear;
+
+
         return response;
     }
 

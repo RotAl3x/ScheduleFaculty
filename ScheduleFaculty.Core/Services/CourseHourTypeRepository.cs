@@ -65,14 +65,6 @@ public class CourseHourTypeRepository : ICourseHourTypeRepository
     {
         var response = new ActionResponse<CourseHourType>();
 
-        var nameExists = await _dbContext.CourseHourTypes.AnyAsync(c => c.CourseId == courseId);
-
-        if (nameExists)
-        {
-            response.AddError("Course type hour with the same name already exists");
-            return response;
-        }
-
         var course = new CourseHourType { CourseId = courseId, HourTypeId = hourTypeId, TotalHours = totalHours };
         var dbCourseHourType = await _dbContext.CourseHourTypes.AddAsync(course);
         await _dbContext.SaveChangesAsync();

@@ -107,13 +107,13 @@ public class HourStudyOfAYearController: ControllerBase
             return BadRequest(hoursStudy.Errors);
         }
 
-        var response = _mapper.Map<HourStudyOfAYearDto>(hoursStudy.Item);
+        var response = _mapper.Map<List<HourStudyOfAYearDto>>(hoursStudy.Item);
         return Ok(response);
     }
     
     [HttpPost]
-    [Authorize(Roles = "Secretary,Professor,LabAssistant",
-        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    // [Authorize(Roles = "Secretary,Professor,LabAssistant",
+    //     AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult> CreateStatus([FromBody] HourStudyOfAYearDto hourStudyOfAYearDto)
     {
         var createHourStudy = await _hourStudyOfAYearRepository.CreateHourStudyOfAYear(
