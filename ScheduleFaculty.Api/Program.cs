@@ -16,6 +16,17 @@ var configuration = builder.Configuration;
 services.AddControllersWithViews().AddNewtonsoftJson();
 services.AddRazorPages();
 
+services.AddCors(options =>
+{
+    options.AddPolicy("ScheduleFacultyCorsPolicy", builder =>
+    {
+        builder
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 services.AddAutoMapper(typeof(MappingProfile));
 
 services.AddDefaultIdentity<ApplicationUser>()
@@ -77,6 +88,7 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ScheduleFac
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCors("ScheduleFacultyCorsPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
