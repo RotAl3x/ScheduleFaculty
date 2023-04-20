@@ -72,7 +72,7 @@ public class IdentityService : IIdentityService
         };
     }
 
-    public async Task<ActionResponse<string>> Register(RegisterRequest request, string role)
+    public async Task<ActionResponse<string>> Register(RegisterRequest request)
     {
         var user = new ApplicationUser
         {
@@ -99,7 +99,7 @@ public class IdentityService : IIdentityService
         }
         
 
-        var addToRole = await _userManager.AddToRoleAsync(user, role);
+        var addToRole = await _userManager.AddToRoleAsync(user, request.role);
 
         if (!addToRole.Succeeded)
         {

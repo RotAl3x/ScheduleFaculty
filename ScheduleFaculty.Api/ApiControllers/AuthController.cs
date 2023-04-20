@@ -35,40 +35,12 @@ public class AuthController : ControllerBase
         return Ok(((ActionResponse<Session>)response).Item);
     }
 
-    [HttpPost("registerSecretary")]
-    [Authorize(Roles = "Secretary",
-        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> RegisterSecretary([FromBody] RegisterRequest request)
-    {
-        var response = await _identityService.Register(request, "Secretary");
-        if (response.HasErrors())
-        {
-            return BadRequest(response.Errors);
-        }
-
-        return Ok(response.Item);
-    }
-    
-    [HttpPost("registerProfessor")]
-    [Authorize(Roles = "Secretary",
-        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> RegisterProfessor([FromBody] RegisterRequest request)
-    {
-        var response = await _identityService.Register(request, "Professor");
-        if (response.HasErrors())
-        {
-            return BadRequest(response.Errors);
-        }
-
-        return Ok(response.Item);
-    }
-    
-    [HttpPost("registerLabAssistant")]
+    [HttpPost("register")]
     [Authorize(Roles = "Secretary,Professor,LabAssistant",
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> RegisterLabAssistant([FromBody] RegisterRequest request)
+    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
-        var response = await _identityService.Register(request, "LabAssistant");
+        var response = await _identityService.Register(request);
         if (response.HasErrors())
         {
             return BadRequest(response.Errors);
