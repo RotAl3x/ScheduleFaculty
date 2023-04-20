@@ -9,4 +9,11 @@ import {NavigationEnd, Router} from "@angular/router";
 })
 export class AppComponent {
   title = 'Frontend';
+
+  constructor(private router:Router) {
+  }
+
+  isOnLogin(){
+    return this.router.url === '/login'
+  }
 }

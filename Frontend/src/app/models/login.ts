@@ -20,8 +20,8 @@ export interface IRegister {
 }
 
 export interface IChangePassword {
-  currentPassword: string,
-  newPassword: string,
-  repeatPassword: string,
+  currentPassword: string|null,
+  newPassword: string|null,
+  repeatPassword: string|null,
 }
 

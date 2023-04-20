@@ -1,2 +1,2 @@
-<app-menu [routerLink]="['/login']" routerLinkActive="hidden">></app-menu>
+<app-menu [class.hidden]="isOnLogin()" ></app-menu>
 <router-outlet></router-outlet>
