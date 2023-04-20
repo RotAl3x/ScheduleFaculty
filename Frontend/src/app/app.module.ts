@@ -13,12 +13,14 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatInputModule} from "@angular/material/input";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { HomePageComponent } from './components/home-page/home-page.component';
+import { MenuComponent } from './components/menu/menu.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HomePageComponent
+    HomePageComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,
