@@ -36,21 +36,12 @@ export class AuthService {
 
   public async changePassword(data: IChangePassword):Promise<any>{
     const url = this._baseUrl+'api/auth/changePassword';
-    return firstValueFrom(this.http.post(url, data, {responseType: 'text'}));
+    const options = await this.getOptions(true);
+    return await firstValueFrom(this.http.post(url, data, options));
   }
 
-  public registerSecretary(data: IRegister): Promise<any> {
+  public register(data: IRegister): Promise<any> {
     const url = this._baseUrl+'api/auth/registerSecretary';
-    return firstValueFrom(this.http.post(url, data, {responseType: 'text'}));
-  }
-
-  public registerProfessor(data: IRegister): Promise<any> {
-    const url = this._baseUrl+'api/auth/registerProfessor';
-    return firstValueFrom(this.http.post(url, data, {responseType: 'text'}));
-  }
-
-  public registerLabAssistant(data: IRegister): Promise<any> {
-    const url = this._baseUrl+'api/auth/LabAssistant';
     return firstValueFrom(this.http.post(url, data, {responseType: 'text'}));
   }
 
@@ -80,8 +71,8 @@ export class AuthService {
     }
   }
 
-  public async getOptions(needsAuth?: boolean): Promise<{ headers?: HttpHeaders }> {
-    return {headers: await this.getHeaders(needsAuth)};
+  public async getOptions(needsAuth?: boolean): Promise<{ headers?: HttpHeaders,responseType: any }> {
+    return {headers: await this.getHeaders(needsAuth),responseType: 'text'};
   }
 
   public async hasRole(role: string): Promise<boolean> {

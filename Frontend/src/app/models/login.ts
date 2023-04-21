@@ -15,12 +15,13 @@ export interface IRegister {
   password: string,
   confirmPassword: string,
   firstName: string,
-  lastName: string
+  lastName: string,
+  role: string,
 }
 
 export interface IChangePassword {
-  currentPassword: string,
-  newPassword: string,
-  repeatPassword: string,
+  currentPassword: string|null,
+  newPassword: string|null,
+  repeatPassword: string|null,
 }
 
