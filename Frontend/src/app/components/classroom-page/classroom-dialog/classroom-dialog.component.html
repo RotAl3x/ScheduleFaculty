@@ -1,0 +1,26 @@
+<form [formGroup]="form" class="forms" style="width: 100%">
+  <mat-form-field class="full-width">
+    <input formControlName="name" matInput placeholder="Nume">
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['name'].untouched && form.controls['name'].errors">
+    <mat-error *ngIf="form.controls['name'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+  <mat-form-field appearance="fill" >
+    <mat-label>Toppings</mat-label>
+    <mat-select formControlName="daysOfWeek" multiple>
+      <mat-option *ngFor="let days of keys()" [value]="days">{{days}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <ng-container *ngIf="!form.controls['daysOfWeek'].untouched && form.controls['daysOfWeek'].errors">
+    <mat-error *ngIf="form.controls['daysOfWeek'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+</form>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Nu mersi</button>
+  <button mat-button (click)="submit($event)">Submit</button>
+</div>

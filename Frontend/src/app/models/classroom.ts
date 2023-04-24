@@ -2,6 +2,6 @@ import {WeekDay} from "@angular/common";
 
 export interface IClassroom {
   id ?: string,
-  name: string,
-  daysOfWeek: WeekDay[],
+  name: string|null,
+  daysOfWeek: WeekDay[]|null,
 }
