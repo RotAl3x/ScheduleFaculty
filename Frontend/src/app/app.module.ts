@@ -15,6 +15,11 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { ChangePasswordPageComponent } from './components/change-password-page/change-password-page.component';
+import { ClassroomPageComponent } from './components/classroom-page/classroom-page.component';
+import {MatCardModule} from "@angular/material/card";
+import { ClassroomDialogComponent } from './components/classroom-page/classroom-dialog/classroom-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -22,7 +27,9 @@ import { ChangePasswordPageComponent } from './components/change-password-page/c
     LoginComponent,
     HomePageComponent,
     MenuComponent,
-    ChangePasswordPageComponent
+    ChangePasswordPageComponent,
+    ClassroomPageComponent,
+    ClassroomDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -36,6 +43,9 @@ import { ChangePasswordPageComponent } from './components/change-password-page/c
     MatSnackBarModule,
     BrowserAnimationsModule,
     FormsModule,
+    MatCardModule,
+    MatDialogModule,
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
