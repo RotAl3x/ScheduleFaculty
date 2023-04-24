@@ -41,6 +41,13 @@ public class ClassroomController : ControllerBase
     {
         var classrooms = await _classroomRepository.GetAllClassrooms();
         var response = _mapper.Map<List<ClassroomDto>>(classrooms.Item);
+        for (var i = 0; i < response.Count; i++)
+        {
+            for (var j = 0; j < response[i].DaysOfWeek.Count; j++)
+            {
+                response[i].DaysOfWeek[j] = response[i].DaysOfWeek[j].ToString();
+            }
+        }
 
         return Ok(response);
     }
@@ -50,7 +57,13 @@ public class ClassroomController : ControllerBase
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult> CreateClassroom([FromBody] ClassroomDto classroomDto)
     {
-        var classroom = await _classroomRepository.CreateClassroom(classroomDto.Name, classroomDto.DaysOfWeek);
+        var freeDays = new List<DayOfWeek>();
+        foreach (var day in classroomDto.DaysOfWeek)
+        {
+            Enum.TryParse(day, out DayOfWeek free);
+            freeDays.Add(free);
+        }
+        var classroom = await _classroomRepository.CreateClassroom(classroomDto.Name,freeDays );
         if (classroom.HasErrors())
         {
             return BadRequest(classroom.Errors);
@@ -65,7 +78,13 @@ public class ClassroomController : ControllerBase
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult> EditClassroom([FromBody] ClassroomDto classroomDto)
     {
-        var classroom = await _classroomRepository.EditClassroom(classroomDto.Id,classroomDto.Name, classroomDto.DaysOfWeek);
+        var freeDays = new List<DayOfWeek>();
+        foreach (var day in classroomDto.DaysOfWeek)
+        {
+            Enum.TryParse(day, out DayOfWeek free);
+            freeDays.Add(free);
+        }
+        var classroom = await _classroomRepository.EditClassroom(classroomDto.Id,classroomDto.Name, freeDays);
         if (classroom.HasErrors())
         {
             return BadRequest(classroom.Errors);

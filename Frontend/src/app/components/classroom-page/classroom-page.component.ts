@@ -44,10 +44,10 @@ export class ClassroomPageComponent implements OnInit {
     });
   }
 
-  weekDaysArrayToString(daysOfWeek: WeekDay[]|null) {
+  weekDaysArrayToString(daysOfWeek: string[]|null) {
     let res: string = ''
     if(daysOfWeek)
-    daysOfWeek.forEach(d => res += (WeekDay[d] + ' '));
+    daysOfWeek.forEach(d => res += (d + ' '));
     return res;
   }
 }

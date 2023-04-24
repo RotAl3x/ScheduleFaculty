@@ -16,7 +16,7 @@ import {delay} from "rxjs";
 export class ClassroomDialogComponent implements OnInit {
   public form = this.formBuilder.group({
     name: ['', [Validators.required]],
-    daysOfWeek: [[0], [Validators.required]]
+    daysOfWeek: [[''], [Validators.required]]
   })
 
   constructor(
@@ -63,10 +63,10 @@ export class ClassroomDialogComponent implements OnInit {
     }
   }
 
-  keys() : Array<string> {
+  keys(): Array<string> {
     var keys = Object.keys(this.WeekDay);
     return keys.slice(keys.length / 2);
   }
 
-  protected readonly WeekDay = WeekDay;
+  public readonly WeekDay = WeekDay;
 }
