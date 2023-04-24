@@ -1,15 +1,18 @@
-<button mat-raised-button color="primary" (click)="openDialog(null)">Adaugă</button>
-<div class="d-flex">
-<ng-container *ngFor="let classroom of classrooms">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>{{classroom.name}}</mat-card-title>
-      <mat-card-subtitle>{{weekDaysArrayToString(classroom.daysOfWeek)}}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-actions>
-      <button mat-button (click)="openDialog(classroom)">Editează</button>
-      <button mat-button (click)="delete(classroom)">Șterge</button>
-    </mat-card-actions>
-  </mat-card>
-</ng-container>
+<div class="container">
+  <h2>Clase</h2>
+  <button mat-raised-button color="primary" (click)="openDialog(null)">Adaugă o nouă clasă</button>
+  <div class="d-flex flex-column">
+    <ng-container *ngFor="let classroom of classrooms">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{classroom.name}}</mat-card-title>
+          <mat-card-subtitle>{{weekDaysArrayToString(classroom.daysOfWeek)}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-button (click)="openDialog(classroom)">Editează</button>
+          <button mat-button color="warn" (click)="delete(classroom)">Șterge</button>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container>
+  </div>
 </div>
