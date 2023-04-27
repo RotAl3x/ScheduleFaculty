@@ -21,19 +21,19 @@ export class ClassroomService {
     return await firstValueFrom(this.http.get<IClassroom[]>(url));
   }
 
-  public async create(data:IClassroom):Promise<IClassroom>{
+  public async create(data:Partial<IClassroom>):Promise<IClassroom>{
     const url = this._baseUrl + 'api/classroom';
     const options = await this.authService.getOptions(true);
     return await firstValueFrom(this.http.post<IClassroom>(url,data,options));
   }
 
-  public async update(data:IClassroom):Promise<IClassroom>{
+  public async update(data:Partial<IClassroom>):Promise<IClassroom>{
     const url = this._baseUrl + 'api/classroom/edit';
     const options = await this.authService.getOptions(true);
     return await firstValueFrom(this.http.patch<IClassroom>(url,data,options));
   }
 
-  public async delete(data: string|undefined):Promise<any>{
+  public async delete(data: string|null):Promise<any>{
     const url = this._baseUrl + 'api/classroom/delete/'+data;
     const options = await this.authService.getOptions(true);
     return await firstValueFrom(this.http.delete<string>(url,options));

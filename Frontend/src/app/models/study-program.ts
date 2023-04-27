@@ -1,5 +1,5 @@
 export interface IStudyProgram {
-  id?: string,
+  id: string|null,
   name: string,
   year: number,
   weeksInASemester: number

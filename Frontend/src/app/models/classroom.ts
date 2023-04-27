@@ -1,6 +1,6 @@
 
 export interface IClassroom {
-  id ?: string,
+  id : string|null,
   name: string|null,
   daysOfWeek: string[]|null,
 }

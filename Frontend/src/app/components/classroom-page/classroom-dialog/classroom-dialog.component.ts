@@ -1,12 +1,13 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {IClassroom} from "../../../models/classroom";
-import {FormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
+import {
+  FormBuilder,
+  Validators
+} from "@angular/forms";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {ClassroomService} from "../../../services/classroom.service";
 import {WeekDay} from "@angular/common";
-import {ILogin} from "../../../models/login";
-import {delay} from "rxjs";
 
 @Component({
   selector: 'app-classroom-dialog',
@@ -15,6 +16,7 @@ import {delay} from "rxjs";
 })
 export class ClassroomDialogComponent implements OnInit {
   public form = this.formBuilder.group({
+    id: ['ddf3c33a-7fa1-442d-9afc-7cac2edb8d3a'],
     name: ['', [Validators.required]],
     daysOfWeek: [[''], [Validators.required]]
   })
@@ -34,8 +36,7 @@ export class ClassroomDialogComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.form.controls.name.patchValue(this.data.name);
-      this.form.controls.daysOfWeek.patchValue(this.data.daysOfWeek)
+      this.form.patchValue(this.data);
     }
   }
 
@@ -46,17 +47,13 @@ export class ClassroomDialogComponent implements OnInit {
       return;
     }
     try {
-      let request: IClassroom = {
-        name: this.form.controls.name.value,
-        daysOfWeek: this.form.controls.daysOfWeek.value
-      };
       if (this.data) {
-        request.id = this.data.id;
-        await this.classroomService.update(request);
+        await this.classroomService.update(this.form.value);
         this.snack.openSnackBar('Clasa a fost actualizată cu succes');
       } else {
-        await this.classroomService.create(request);
+        await this.classroomService.create(this.form.value);
         this.snack.openSnackBar('Clasa a fost adaugată cu succes');
+        this.form.reset();
       }
     } catch (e) {
       this.snack.showError(e);

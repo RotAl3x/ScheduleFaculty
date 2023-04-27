@@ -15,8 +15,10 @@ public class MappingProfile : Profile
         CreateMap<NumberOfGroupsOfYear, TotalGroupDto>().ReverseMap();
         CreateMap<Status, StatusDto>().ReverseMap();
         CreateMap<Course, CourseDto>().ReverseMap();
+        CreateMap<Course, CourseResponseDto>().ReverseMap();
         CreateMap<HourType, HourTypeDto>().ReverseMap();
         CreateMap<CourseHourType, CourseHourTypeDto>().ReverseMap();
         CreateMap<HourStudyOfAYear, HourStudyOfAYearDto>().ReverseMap();
+        CreateMap<ApplicationUser, UserDto>().ReverseMap();
     }
 }

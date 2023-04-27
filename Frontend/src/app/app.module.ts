@@ -20,6 +20,9 @@ import {MatCardModule} from "@angular/material/card";
 import { ClassroomDialogComponent } from './components/classroom-page/classroom-dialog/classroom-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatSelectModule} from "@angular/material/select";
+import {CoursePageComponent} from "./components/course-page/course-page.component";
+import {CourseDialogComponent} from "./components/course-page/course-dialog/course-dialog.component";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -29,24 +32,27 @@ import {MatSelectModule} from "@angular/material/select";
     MenuComponent,
     ChangePasswordPageComponent,
     ClassroomPageComponent,
-    ClassroomDialogComponent
+    ClassroomDialogComponent,
+    CoursePageComponent,
+    CourseDialogComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    RouterOutlet,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatInputModule,
-    MatSnackBarModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    MatCardModule,
-    MatDialogModule,
-    MatSelectModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        RouterOutlet,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatInputModule,
+        MatSnackBarModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        MatCardModule,
+        MatDialogModule,
+        MatSelectModule,
+        MatCheckboxModule,
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

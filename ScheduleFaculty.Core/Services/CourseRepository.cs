@@ -18,7 +18,7 @@ public class CourseRepository : ICourseRepository
     public async Task<ActionResponse<Course>> GetCourseById(Guid id)
     {
         var response = new ActionResponse<Course>();
-        var course = await _dbContext.Courses.SingleOrDefaultAsync(c => c.Id == id);
+        var course = await _dbContext.Courses.Include(c=>c.StudyProgram).Include(c=>c.ProfessorUser).SingleOrDefaultAsync(c => c.Id == id);
 
         if (course is null)
         {
@@ -33,7 +33,7 @@ public class CourseRepository : ICourseRepository
     public async Task<ActionResponse<List<Course>>> GetCoursesByProfessorId(string professorId)
     {
         var response = new ActionResponse<List<Course>>();
-        var courses = await _dbContext.Courses.Where(c => c.ProfessorUserId == professorId).ToListAsync();
+        var courses = await _dbContext.Courses.Where(c => c.ProfessorUserId == professorId).Include(c=>c.StudyProgram).Include(c=>c.ProfessorUser).ToListAsync();
 
         response.Item = courses;
         return response;
@@ -42,7 +42,7 @@ public class CourseRepository : ICourseRepository
     public async Task<ActionResponse<List<Course>>> GetCoursesByStudyProgramId(Guid studyProgramId)
     {
         var response = new ActionResponse<List<Course>>();
-        var courses = await _dbContext.Courses.Where(c => c.StudyProgramYearId == studyProgramId).ToListAsync();
+        var courses = await _dbContext.Courses.Where(c => c.StudyProgramYearId == studyProgramId).Include(c=>c.StudyProgram).Include(c=>c.ProfessorUser).ToListAsync();
 
         response.Item = courses;
         return response;
@@ -51,7 +51,7 @@ public class CourseRepository : ICourseRepository
     public async Task<ActionResponse<List<Course>>> GetAllCourses()
     {
         var response = new ActionResponse<List<Course>>();
-        var courses = await _dbContext.Courses.ToListAsync();
+        var courses = await _dbContext.Courses.Include(c=>c.StudyProgram).Include(c=>c.ProfessorUser).ToListAsync();
 
         response.Item = courses;
         return response;

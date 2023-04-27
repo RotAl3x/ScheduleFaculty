@@ -31,12 +31,7 @@ export class ChangePasswordPageComponent {
       return;
     }
     try {
-      let request: IChangePassword = {
-        currentPassword: this.form.controls.currentPassword.value,
-        newPassword: this.form.controls.newPassword.value,
-        repeatPassword: this.form.controls.repeatPassword.value,
-      };
-      await this.authService.changePassword(request);
+      await this.authService.changePassword(this.form.value);
       this.snack.openSnackBar('Parola a fost schimbată cu succes!');
 
     } catch (e) {

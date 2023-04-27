@@ -31,7 +31,12 @@ body {
   flex-direction: column;
 }
 
-h1, h2, h3, h4, h5, h6, div {
+h1, h2, h3, h4, h5, h6 {
   font-family: 'Castoro Titling', cursive;
 }
+
+mat-card{
+  margin: 15px 0;
+}
+
 

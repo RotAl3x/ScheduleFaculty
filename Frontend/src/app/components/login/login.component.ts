@@ -37,11 +37,7 @@ export class LoginComponent implements OnInit{
       return;
     }
     try {
-      let request: ILogin = {
-        email: this.form.controls.email.value,
-        password: this.form.controls.password.value
-      };
-      await this.authService.login(request);
+      await this.authService.login(this.form.value);
       await delay(1000);
       this.snack.openSnackBar('Te-ai logat cu succes');
       await this.router.navigate(['home']);

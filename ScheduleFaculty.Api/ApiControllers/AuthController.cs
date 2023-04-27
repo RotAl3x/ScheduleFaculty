@@ -1,9 +1,12 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using ScheduleFaculty.Core.Services.Abstractions;
 using ScheduleFaculty.Core.Utils;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ScheduleFaculty.Api.DTOs;
 using ScheduleFaculty.API.Utils;
 using ScheduleFaculty.Core.Entities;
 
@@ -16,11 +19,13 @@ public class AuthController : ControllerBase
 {
     private readonly IIdentityService _identityService;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IMapper _mapper;
 
-    public AuthController(UserManager<ApplicationUser> userManager, IIdentityService identityService)
+    public AuthController(IMapper mapper, UserManager<ApplicationUser> userManager, IIdentityService identityService)
     {
         _userManager = userManager;
         _identityService = identityService;
+        _mapper = mapper;
     }
 
     [HttpPost("login")]
@@ -68,5 +73,20 @@ public class AuthController : ControllerBase
         }
 
         return Ok(response.Item);
+    }
+
+    [HttpGet("getAllUsersByRole/{role}")]
+    public async Task<IActionResult> GetAllUsers([FromRoute] string role)
+    {
+        var users = await _userManager.GetUsersInRoleAsync(role);
+
+        if (!users.Any())
+        {
+            return NotFound("Error to find user with this role");
+        }
+
+        var response = _mapper.Map<List<UserDto>>(users);
+
+        return Ok(response);
     }
 }

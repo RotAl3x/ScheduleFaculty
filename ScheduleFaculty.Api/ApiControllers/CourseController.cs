@@ -30,33 +30,33 @@ public class CourseController : ControllerBase
             return BadRequest(course.Errors);
         }
 
-        var response = _mapper.Map<CourseDto>(course.Item);
+        var response = _mapper.Map<CourseResponseDto>(course.Item);
         return Ok(response);
     }
 
     [HttpGet("getByProfessorId/{id}")]
     public async Task<ActionResult> GetCourseByProfessorId([FromRoute] string id)
     {
-        var course = await _courseRepository.GetCoursesByProfessorId(id);
-        if (course.HasErrors())
+        var courses = await _courseRepository.GetCoursesByProfessorId(id);
+        if (courses.HasErrors())
         {
-            return BadRequest(course.Errors);
+            return BadRequest(courses.Errors);
         }
 
-        var response = _mapper.Map<CourseDto>(course.Item);
+        var response = _mapper.Map<List<CourseResponseDto>>(courses.Item);
         return Ok(response);
     }
 
     [HttpGet("getCourseByStudyProgramId/{id}")]
     public async Task<ActionResult> GetCourseByStudyProgramId([FromRoute] Guid id)
     {
-        var course = await _courseRepository.GetCoursesByStudyProgramId(id);
-        if (course.HasErrors())
+        var courses = await _courseRepository.GetCoursesByStudyProgramId(id);
+        if (courses.HasErrors())
         {
-            return BadRequest(course.Errors);
+            return BadRequest(courses.Errors);
         }
 
-        var response = _mapper.Map<CourseDto>(course.Item);
+        var response = _mapper.Map<List<CourseResponseDto>>(courses.Item);
         return Ok(response);
     }
 
@@ -69,7 +69,7 @@ public class CourseController : ControllerBase
             return BadRequest(courses.Errors);
         }
 
-        var response = _mapper.Map<List<CourseDto>>(courses.Item);
+        var response = _mapper.Map<List<CourseResponseDto>>(courses.Item);
         return Ok(response);
     }
 

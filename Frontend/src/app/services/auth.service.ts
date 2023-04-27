@@ -3,8 +3,9 @@ import {environment} from "../../environment/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {LocalStorage} from "@ngx-pwa/local-storage";
-import {IAuthSession, IChangePassword, ILogin, IRegister} from "../models/login";
+import {IAuthSession, IChangePassword, ILogin, IRegister, IUser} from "../models/login";
 import {firstValueFrom, map, tap} from "rxjs";
+import {IClassroom} from "../models/classroom";
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class AuthService {
               private router: Router) {
   }
 
-  public async login(requestModel: ILogin): Promise<any> {
+  public async login(requestModel: Partial<ILogin>): Promise<any> {
     const url = this._baseUrl + 'api/auth/login';
     return firstValueFrom(this.http.post<IAuthSession>(url, requestModel)
       .pipe(tap(async res => {
@@ -34,7 +35,7 @@ export class AuthService {
       })));
   }
 
-  public async changePassword(data: IChangePassword):Promise<any>{
+  public async changePassword(data: Partial<IChangePassword>):Promise<any>{
     const url = this._baseUrl+'api/auth/changePassword';
     const options = await this.getOptions(true);
     return await firstValueFrom(this.http.post(url, data, options));
@@ -103,6 +104,11 @@ export class AuthService {
     }
     return this._session;
   }
+
+  public async getUsersByRole(role:string): Promise<IUser[]>{
+    const url = this._baseUrl + 'api/auth/getAllUsersByRole/'+role;
+    return await firstValueFrom(this.http.get<IUser[]>(url));
+}
 
 
   public async logout(): Promise<void> {
