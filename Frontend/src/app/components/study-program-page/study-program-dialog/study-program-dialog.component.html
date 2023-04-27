@@ -1,0 +1,36 @@
+<form [formGroup]="form" class="forms" style="width: 100%">
+  <mat-form-field class="full-width">
+    <mat-label>Nume</mat-label>
+    <input formControlName="name" matInput>
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['name'].untouched && form.controls['name'].errors">
+    <mat-error *ngIf="form.controls['name'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+  <mat-form-field class="full-width">
+    <mat-label>Anul</mat-label>
+    <input formControlName="year" matInput type="number">
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['year'].untouched && form.controls['year'].errors">
+    <mat-error *ngIf="form.controls['year'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+  <mat-form-field class="full-width">
+    <mat-label>Săptămâni:</mat-label>
+    <input formControlName="weeksInASemester" matInput type="number">
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['weeksInASemester'].untouched && form.controls['weeksInASemester'].errors">
+    <mat-error *ngIf="form.controls['weeksInASemester'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+</form>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Nu mersi</button>
+  <button mat-button (click)="submit($event)">Submit</button>
+</div>

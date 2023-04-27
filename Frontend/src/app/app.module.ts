@@ -23,6 +23,8 @@ import {MatSelectModule} from "@angular/material/select";
 import {CoursePageComponent} from "./components/course-page/course-page.component";
 import {CourseDialogComponent} from "./components/course-page/course-dialog/course-dialog.component";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { StudyProgramPageComponent } from './components/study-program-page/study-program-page.component';
+import { StudyProgramDialogComponent } from './components/study-program-page/study-program-dialog/study-program-dialog.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     ClassroomPageComponent,
     ClassroomDialogComponent,
     CoursePageComponent,
-    CourseDialogComponent
+    CourseDialogComponent,
+    StudyProgramPageComponent,
+    StudyProgramDialogComponent
   ],
     imports: [
         BrowserModule,

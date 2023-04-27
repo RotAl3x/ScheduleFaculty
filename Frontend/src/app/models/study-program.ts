@@ -1,6 +1,6 @@
 export interface IStudyProgram {
   id: string|null,
-  name: string,
-  year: number,
-  weeksInASemester: number
+  name: string|null,
+  year: number|null,
+  weeksInASemester: number|null
 }

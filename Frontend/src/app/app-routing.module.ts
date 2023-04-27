@@ -5,6 +5,7 @@ import {HomePageComponent} from "./components/home-page/home-page.component";
 import {ChangePasswordPageComponent} from "./components/change-password-page/change-password-page.component";
 import {ClassroomPageComponent} from "./components/classroom-page/classroom-page.component";
 import {CoursePageComponent} from "./components/course-page/course-page.component";
+import {StudyProgramPageComponent} from "./components/study-program-page/study-program-page.component";
 
 const routes: Routes = [
   {path:'login',component:LoginComponent},
@@ -12,6 +13,7 @@ const routes: Routes = [
   {path:'change-password', component:ChangePasswordPageComponent},
   {path:'classroom', component:ClassroomPageComponent},
   {path:'course', component:CoursePageComponent},
+  {path:"study", component:StudyProgramPageComponent},
   {path:'',redirectTo:'/login',pathMatch:'full'},
 ];
 
