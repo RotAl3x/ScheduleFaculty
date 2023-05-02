@@ -1,0 +1,29 @@
+<form [formGroup]="form" class="forms" style="width: 100%">
+  <mat-form-field class="full-width">
+    <mat-label>Nume</mat-label>
+    <input formControlName="name" matInput>
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['name'].untouched && form.controls['name'].errors">
+    <mat-error *ngIf="form.controls['name'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+
+  <mat-checkbox formControlName="needAllSemiGroups">E curs?</mat-checkbox>
+
+  <mat-form-field class="full-width" *ngIf="this.form.controls.needAllSemiGroups.value==false">
+    <mat-label>Semigrupe pe oră</mat-label>
+    <input formControlName="semiGroupsPerHour" matInput type="number">
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['semiGroupsPerHour'].untouched && form.controls['semiGroupsPerHour'].errors">
+    <mat-error *ngIf="form.controls['semiGroupsPerHour'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+</form>
+<div mat-dialog-actions>
+  <button (click)="onNoClick()" mat-button>Nu mersi</button>
+  <button (click)="submit($event)" mat-button>Submit</button>
+</div>

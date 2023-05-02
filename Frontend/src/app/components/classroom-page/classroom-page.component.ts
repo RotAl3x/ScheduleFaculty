@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {ClassroomService} from "../../services/classroom.service";
 import {IClassroom} from "../../models/classroom";
 import {SnackBarService} from "../../services/snack-bar.service";
-import {WeekDay} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
 import {ClassroomDialogComponent} from "./classroom-dialog/classroom-dialog.component";
 
@@ -17,7 +16,7 @@ export class ClassroomPageComponent implements OnInit {
 
   constructor(private classroomService: ClassroomService,
               private snack: SnackBarService,
-              public dialog:MatDialog) {
+              public dialog: MatDialog) {
   }
 
   async ngOnInit() {
@@ -34,7 +33,7 @@ export class ClassroomPageComponent implements OnInit {
     }
   }
 
-  openDialog(classroom:IClassroom|null): void {
+  openDialog(classroom: IClassroom | null): void {
     const dialogRef = this.dialog.open(ClassroomDialogComponent, {
       data: classroom,
     });
@@ -44,10 +43,10 @@ export class ClassroomPageComponent implements OnInit {
     });
   }
 
-  weekDaysArrayToString(daysOfWeek: string[]|null) {
+  weekDaysArrayToString(daysOfWeek: string[] | null) {
     let res: string = ''
-    if(daysOfWeek)
-    daysOfWeek.forEach(d => res += (d + ' '));
+    if (daysOfWeek)
+      daysOfWeek.forEach(d => res += (d + ' '));
     return res;
   }
 }

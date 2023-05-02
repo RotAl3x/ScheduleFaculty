@@ -5,18 +5,17 @@ import {Router} from "@angular/router";
 import {LocalStorage} from "@ngx-pwa/local-storage";
 import {IAuthSession, IChangePassword, ILogin, IRegister, IUser} from "../models/login";
 import {firstValueFrom, map, tap} from "rxjs";
-import {IClassroom} from "../models/classroom";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private _token?: string;
-  private _session?: IAuthSession;
   private static readonly tokenStorageKey: string = 'token';
   private static readonly sessionStorageKey: string = 'session';
+  private _token?: string;
+  private _session?: IAuthSession;
   private _authState: EventEmitter<boolean> = new EventEmitter();
-  private readonly _baseUrl= environment.apiUrl;
+  private readonly _baseUrl = environment.apiUrl;
 
 
   constructor(private http: HttpClient,
@@ -35,14 +34,14 @@ export class AuthService {
       })));
   }
 
-  public async changePassword(data: Partial<IChangePassword>):Promise<any>{
-    const url = this._baseUrl+'api/auth/changePassword';
+  public async changePassword(data: Partial<IChangePassword>): Promise<any> {
+    const url = this._baseUrl + 'api/auth/changePassword';
     const options = await this.getOptions(true);
     return await firstValueFrom(this.http.post(url, data, options));
   }
 
   public register(data: IRegister): Promise<any> {
-    const url = this._baseUrl+'api/auth/registerSecretary';
+    const url = this._baseUrl + 'api/auth/registerSecretary';
     return firstValueFrom(this.http.post(url, data, {responseType: 'text'}));
   }
 
@@ -57,23 +56,8 @@ export class AuthService {
     await this.loadSession();
   }
 
-  private async loadSession(): Promise<void> {
-    const initialStatus = !!this._token;
-    const oldToken = this._token;
-    this._token = <string>await firstValueFrom(this.storage.getItem(AuthService.tokenStorageKey));
-    if (this._token) {
-      this._session = <IAuthSession>await firstValueFrom(this.storage.getItem(AuthService.sessionStorageKey));
-    } else {
-      this._session = undefined;
-    }
-    const differentStatus = initialStatus !== !!this._token || oldToken !== this._token;
-    if (differentStatus) {
-      this._authState.emit(!!this._token);
-    }
-  }
-
-  public async getOptions(needsAuth?: boolean): Promise<{ headers?: HttpHeaders,responseType: any }> {
-    return {headers: await this.getHeaders(needsAuth),responseType: 'text'};
+  public async getOptions(needsAuth?: boolean): Promise<{ headers?: HttpHeaders, responseType: any }> {
+    return {headers: await this.getHeaders(needsAuth), responseType: 'text'};
   }
 
   public async hasRole(role: string): Promise<boolean> {
@@ -105,14 +89,28 @@ export class AuthService {
     return this._session;
   }
 
-  public async getUsersByRole(role:string): Promise<IUser[]>{
-    const url = this._baseUrl + 'api/auth/getAllUsersByRole/'+role;
+  public async getUsersByRole(role: string): Promise<IUser[]> {
+    const url = this._baseUrl + 'api/auth/getAllUsersByRole/' + role;
     return await firstValueFrom(this.http.get<IUser[]>(url));
-}
-
+  }
 
   public async logout(): Promise<void> {
     await this.saveSession();
     await this.router.navigate(['/']);
+  }
+
+  private async loadSession(): Promise<void> {
+    const initialStatus = !!this._token;
+    const oldToken = this._token;
+    this._token = <string>await firstValueFrom(this.storage.getItem(AuthService.tokenStorageKey));
+    if (this._token) {
+      this._session = <IAuthSession>await firstValueFrom(this.storage.getItem(AuthService.sessionStorageKey));
+    } else {
+      this._session = undefined;
+    }
+    const differentStatus = initialStatus !== !!this._token || oldToken !== this._token;
+    if (differentStatus) {
+      this._authState.emit(!!this._token);
+    }
   }
 }

@@ -97,9 +97,12 @@ public class StatusRepository : IStatusRepository
             return response;
         }
 
-        foreach (var statusToFalse in allStatuses)
+        if (isActive)
         {
-            statusToFalse.IsActive = false;
+            foreach (var statusToFalse in allStatuses)
+            {
+                statusToFalse.IsActive = false;
+            }
         }
 
         status.IsActive = isActive;

@@ -1,6 +1,6 @@
 <div class="container">
   <h2>Programe de studii</h2>
-  <button mat-raised-button color="primary" (click)="openDialog(null)">Programe de studii</button>
+  <button (click)="openDialog(null)" color="primary" mat-raised-button>Adaugă un nou program de studiu</button>
   <div class="d-flex flex-column">
     <ng-container *ngFor="let studyProgram of studyPrograms">
       <mat-card>
@@ -10,8 +10,8 @@
           <mat-card-subtitle>Săptămâni:{{studyProgram.weeksInASemester}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-actions>
-          <button mat-button (click)="openDialog(studyProgram)">Editează</button>
-          <button mat-button color="warn" (click)="delete(studyProgram)">Șterge</button>
+          <button (click)="openDialog(studyProgram)" mat-button>Editează</button>
+          <button (click)="delete(studyProgram)" color="warn" mat-button>Șterge</button>
         </mat-card-actions>
       </mat-card>
     </ng-container>

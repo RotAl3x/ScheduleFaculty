@@ -7,15 +7,16 @@ import {Router} from "@angular/router";
 })
 export class NavigateService {
 
-  private authService= inject(AuthService);
-  private router= inject(Router)
+  private authService = inject(AuthService);
+  private router = inject(Router)
+
   constructor() {
 
   }
 
-  async toHome(){
-    const session=await this.authService.getSession();
-    if(session){
+  async toHome() {
+    const session = await this.authService.getSession();
+    if (session) {
       await this.router.navigate(['home']);
     }
   }

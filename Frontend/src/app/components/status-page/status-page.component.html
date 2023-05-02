@@ -1,0 +1,19 @@
+<div class="container">
+  <h2>Statusuri</h2>
+  <div class="d-flex flex-column">
+    <ng-container *ngFor="let status of statuses">
+      <mat-card [class.color-card-active]="status.isActive">
+        <mat-card-header>
+          <mat-card-title>{{status.name}}</mat-card-title>
+          <mat-card-subtitle>Semestrul:{{status.semester}}</mat-card-subtitle>
+          <mat-card-subtitle>Activ:{{status.isActive}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button (click)="openDialog(status)" mat-button>Editează</button>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container>
+  </div>
+</div>
+
+

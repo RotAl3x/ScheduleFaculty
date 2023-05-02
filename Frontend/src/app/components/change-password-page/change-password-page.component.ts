@@ -2,9 +2,6 @@ import {Component} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {AuthService} from "../../services/auth.service";
 import {SnackBarService} from "../../services/snack-bar.service";
-import {Router} from "@angular/router";
-import {IChangePassword, ILogin} from "../../models/login";
-import {delay} from "rxjs";
 
 @Component({
   selector: 'app-change-password-page',
@@ -12,17 +9,16 @@ import {delay} from "rxjs";
   styleUrls: ['./change-password-page.component.scss']
 })
 export class ChangePasswordPageComponent {
-  constructor(private authService: AuthService,
-              private formBuilder: FormBuilder,
-              private snack: SnackBarService,) {
-  }
-
-
   public form = this.formBuilder.group({
     currentPassword: ['', [Validators.required, Validators.minLength(6)]],
     newPassword: ['', [Validators.required, Validators.minLength(6)]],
     repeatPassword: ['', [Validators.required, Validators.minLength(6)]]
   })
+
+  constructor(private authService: AuthService,
+              private formBuilder: FormBuilder,
+              private snack: SnackBarService,) {
+  }
 
   async submit(e: Event) {
     this.form.markAllAsTouched();

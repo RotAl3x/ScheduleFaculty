@@ -1,19 +1,20 @@
 <div class="container">
   <h2>Cursuri</h2>
-  <button mat-raised-button color="primary" (click)="openDialog(null)">Adaugă un nou curs</button>
+  <button (click)="openDialog(null)" color="primary" mat-raised-button>Adaugă un nou curs</button>
   <div class="d-flex flex-column">
     <ng-container *ngFor="let course of courses">
       <mat-card>
         <mat-card-header>
           <mat-card-title>{{course.name}}</mat-card-title>
           <mat-card-subtitle>Program de studiu: {{course.studyProgram.name}}</mat-card-subtitle>
-          <mat-card-subtitle>Profesor: {{course.professorUser.firstName+' '+course.professorUser.lastName}}</mat-card-subtitle>
+          <mat-card-subtitle>
+            Profesor: {{course.professorUser.firstName + ' ' + course.professorUser.lastName}}</mat-card-subtitle>
           <mat-card-subtitle>Semestrul: {{course.semester}}</mat-card-subtitle>
           <mat-card-subtitle>Opțională: {{course.isOptional}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-actions>
-          <button mat-button (click)="openDialog(course)">Editează</button>
-          <button mat-button color="warn" (click)="delete(course)">Șterge</button>
+          <button (click)="openDialog(course)" mat-button>Editează</button>
+          <button (click)="delete(course)" color="warn" mat-button>Șterge</button>
         </mat-card-actions>
       </mat-card>
     </ng-container>

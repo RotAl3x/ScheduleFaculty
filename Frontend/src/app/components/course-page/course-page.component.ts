@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import {ICourse, ICourseResponse} from "../../models/course";
+import {Component} from '@angular/core';
+import {ICourseResponse} from "../../models/course";
 import {CourseService} from "../../services/course.service";
 import {SnackBarService} from "../../services/snack-bar.service";
 import {MatDialog} from "@angular/material/dialog";

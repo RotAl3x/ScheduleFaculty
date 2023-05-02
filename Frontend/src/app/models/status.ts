@@ -1,6 +1,6 @@
 export interface IStatus {
-  id?: string,
-  name: string,
-  semester: number,
-  isActive: boolean
+  id: string | null,
+  name: string | null,
+  semester: number | null,
+  isActive: boolean | null
 }

@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {ICourse, ICourseResponse} from "../../../models/course";
+import {ICourseResponse} from "../../../models/course";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {CourseService} from "../../../services/course.service";
 import {IStudyProgram} from "../../../models/study-program";

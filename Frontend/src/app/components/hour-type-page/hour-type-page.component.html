@@ -1,0 +1,19 @@
+<div class="container">
+  <h2>Tipuri de oră</h2>
+  <button (click)="openDialog(null)" color="primary" mat-raised-button>Adaugă un nou tip de oră</button>
+  <div class="d-flex flex-column">
+    <ng-container *ngFor="let hourType of hourTypes">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{hourType.name}}</mat-card-title>
+          <mat-card-subtitle>Semigrupe pe oră:{{hourType.semiGroupsPerHour}}</mat-card-subtitle>
+          <mat-card-subtitle>Are nevoie de toate semigrupele(Curs):{{hourType.needAllSemiGroups}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions>
+          <button (click)="openDialog(hourType)" mat-button>Editează</button>
+          <button (click)="delete(hourType)" color="warn" mat-button>Șterge</button>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container>
+  </div>
+</div>

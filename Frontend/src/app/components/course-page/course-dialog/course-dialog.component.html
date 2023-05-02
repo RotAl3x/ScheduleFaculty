@@ -1,7 +1,7 @@
 <form [formGroup]="form" class="forms" style="width: 100%">
-  <mat-form-field appearance="fill" >
+  <mat-form-field appearance="fill">
     <mat-label>Program de studiu</mat-label>
-    <mat-select formControlName="studyProgramYearId" [compareWith]="compareFn">
+    <mat-select [compareWith]="compareFn" formControlName="studyProgramYearId">
       <mat-option *ngFor="let study of studyPrograms" [value]="study.id">{{study.name}}</mat-option>
     </mat-select>
   </mat-form-field>
@@ -11,10 +11,11 @@
     </mat-error>
   </ng-container>
 
-  <mat-form-field appearance="fill" >
+  <mat-form-field appearance="fill">
     <mat-label>Profesor</mat-label>
-    <mat-select formControlName="professorUserId" [compareWith]="compareFn">
-      <mat-option *ngFor="let professor of professorUsers" [value]="professor.id">{{professor.firstName +' ' +professor.lastName}}</mat-option>
+    <mat-select [compareWith]="compareFn" formControlName="professorUserId">
+      <mat-option *ngFor="let professor of professorUsers"
+                  [value]="professor.id">{{professor.firstName + ' ' + professor.lastName}}</mat-option>
     </mat-select>
   </mat-form-field>
   <ng-container *ngIf="!form.controls['professorUserId'].untouched && form.controls['professorUserId'].errors">
@@ -25,7 +26,7 @@
 
   <mat-form-field class="full-width">
     <mat-label>Nume</mat-label>
-    <input formControlName="name" matInput >
+    <input formControlName="name" matInput>
   </mat-form-field>
   <ng-container *ngIf="!form.controls['name'].untouched && form.controls['name'].errors">
     <mat-error *ngIf="form.controls['name'].errors['required']">
@@ -53,10 +54,10 @@
     </mat-error>
   </ng-container>
 
-    <mat-checkbox formControlName="isOptional">Optional</mat-checkbox>
+  <mat-checkbox formControlName="isOptional">Optional</mat-checkbox>
 </form>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Nu mersi</button>
-  <button mat-button (click)="submit($event)">Submit</button>
+  <button (click)="onNoClick()" mat-button>Nu mersi</button>
+  <button (click)="submit($event)" mat-button>Submit</button>
 </div>
 

@@ -1,15 +1,16 @@
 export interface ILogin {
-  email: string|null;
-  password: string|null;
+  email: string | null;
+  password: string | null;
 }
 
-export interface IAuthSession{
+export interface IAuthSession {
   userId: string;
   username: string;
   token: string;
   tokenType: string;
   role: string;
 }
+
 export interface IRegister {
   email: string,
   password: string,
@@ -20,9 +21,9 @@ export interface IRegister {
 }
 
 export interface IChangePassword {
-  currentPassword: string|null,
-  newPassword: string|null,
-  repeatPassword: string|null,
+  currentPassword: string | null,
+  newPassword: string | null,
+  repeatPassword: string | null,
 }
 
 export interface IUser {

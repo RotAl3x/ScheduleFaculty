@@ -1,10 +1,8 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {IStudyProgram} from "../../models/study-program";
 import {SnackBarService} from "../../services/snack-bar.service";
 import {MatDialog} from "@angular/material/dialog";
 import {StudyProgramService} from "../../services/study-program.service";
-import {IClassroom} from "../../models/classroom";
-import {ClassroomDialogComponent} from "../classroom-page/classroom-dialog/classroom-dialog.component";
 import {StudyProgramDialogComponent} from "./study-program-dialog/study-program-dialog.component";
 
 @Component({
@@ -14,11 +12,11 @@ import {StudyProgramDialogComponent} from "./study-program-dialog/study-program-
 })
 export class StudyProgramPageComponent {
 
-  public studyPrograms:IStudyProgram[] |undefined;
+  public studyPrograms: IStudyProgram[] | undefined;
 
-  constructor(private studyProgramService:StudyProgramService,
+  constructor(private studyProgramService: StudyProgramService,
               private snack: SnackBarService,
-              public dialog:MatDialog) {
+              public dialog: MatDialog) {
   }
 
   async ngOnInit() {
@@ -35,7 +33,7 @@ export class StudyProgramPageComponent {
     }
   }
 
-  openDialog(studyProgram: IStudyProgram|null): void {
+  openDialog(studyProgram: IStudyProgram | null): void {
     const dialogRef = this.dialog.open(StudyProgramDialogComponent, {
       data: studyProgram,
     });

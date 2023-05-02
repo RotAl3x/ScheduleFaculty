@@ -1,10 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {IClassroom} from "../../../models/classroom";
-import {
-  FormBuilder,
-  Validators
-} from "@angular/forms";
+import {FormBuilder, Validators} from "@angular/forms";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {ClassroomService} from "../../../services/classroom.service";
 import {WeekDay} from "@angular/common";
@@ -20,6 +17,7 @@ export class ClassroomDialogComponent implements OnInit {
     name: ['', [Validators.required]],
     daysOfWeek: [[''], [Validators.required]]
   })
+  public readonly WeekDay = WeekDay;
 
   constructor(
     public dialogRef: MatDialogRef<ClassroomDialogComponent>,
@@ -64,6 +62,4 @@ export class ClassroomDialogComponent implements OnInit {
     var keys = Object.keys(this.WeekDay);
     return keys.slice(keys.length / 2);
   }
-
-  public readonly WeekDay = WeekDay;
 }

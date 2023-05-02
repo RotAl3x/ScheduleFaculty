@@ -1,6 +1,6 @@
 export interface IHourType {
-  id?: string,
-  name: string,
-  semiGroupsPerHour: number,
-  needAllSemiGroups: number,
+  id: string|null,
+  name: string|null,
+  semiGroupsPerHour: number|null,
+  needAllSemiGroups: boolean|null,
 }

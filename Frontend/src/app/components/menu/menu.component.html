@@ -1,7 +1,7 @@
 <div class="top-buttons">
-  <h2 class="logo" [routerLink]="['/home']">Orar</h2>
+  <h2 [routerLink]="['/home']" class="logo">Orar</h2>
   <div>
-    <button mat-raised-button color="primary" [routerLink]="['/change-password']" >Schimbă parola</button>
-    <button mat-raised-button color="warn" (click)="logout()">Deconectează-te</button>
+    <button [routerLink]="['/change-password']" color="primary" mat-raised-button>Schimbă parola</button>
+    <button (click)="logout()" color="warn" mat-raised-button>Deconectează-te</button>
   </div>
 </div>

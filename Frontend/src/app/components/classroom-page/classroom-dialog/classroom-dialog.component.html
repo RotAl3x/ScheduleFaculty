@@ -7,7 +7,7 @@
       Field is required
     </mat-error>
   </ng-container>
-  <mat-form-field appearance="fill" >
+  <mat-form-field appearance="fill">
     <mat-label>Zile libere</mat-label>
     <mat-select formControlName="daysOfWeek" multiple>
       <mat-option *ngFor="let days of keys()" [value]="days">{{days}}</mat-option>
@@ -21,6 +21,6 @@
   </ng-container>
 </form>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Nu mersi</button>
-  <button mat-button (click)="submit($event)">Submit</button>
+  <button (click)="onNoClick()" mat-button>Nu mersi</button>
+  <button (click)="submit($event)" mat-button>Submit</button>
 </div>
