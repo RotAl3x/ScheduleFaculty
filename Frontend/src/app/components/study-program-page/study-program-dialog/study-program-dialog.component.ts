@@ -16,6 +16,8 @@ export class StudyProgramDialogComponent {
     name: ['', [Validators.required]],
     year: [1, [Validators.required]],
     weeksInASemester: [0, [Validators.required]],
+    numberOfSemiGroups: [0, [Validators.required]],
+    howManySemiGroupsAreInAGroup: [0, [Validators.required]],
   })
 
   constructor(

@@ -29,6 +29,26 @@
     </mat-error>
   </ng-container>
 
+  <mat-form-field class="full-width">
+    <mat-label>Câte semigrupe are:</mat-label>
+    <input formControlName="numberOfSemiGroups" matInput type="number">
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['numberOfSemiGroups'].untouched && form.controls['numberOfSemiGroups'].errors">
+    <mat-error *ngIf="form.controls['numberOfSemiGroups'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+  <mat-form-field class="full-width">
+    <mat-label>Câte semigrupe sunt intr-o grupa:</mat-label>
+    <input formControlName="howManySemiGroupsAreInAGroup" matInput type="number">
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['howManySemiGroupsAreInAGroup'].untouched && form.controls['howManySemiGroupsAreInAGroup'].errors">
+    <mat-error *ngIf="form.controls['howManySemiGroupsAreInAGroup'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
 </form>
 <div mat-dialog-actions>
   <button (click)="onNoClick()" mat-button>Nu mersi</button>

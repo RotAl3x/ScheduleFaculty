@@ -48,7 +48,7 @@ public class StudyProgramController : ControllerBase
     public async Task<ActionResult> CreateStudyProgram([FromBody] StudyProgramDto studyProgramDto)
     {
         var studyProgram = await _studyProgramRepository.CreateStudyProgram(studyProgramDto.Name, studyProgramDto.Year,
-            studyProgramDto.WeeksInASemester);
+            studyProgramDto.WeeksInASemester,studyProgramDto.NumberOfSemiGroups,studyProgramDto.HowManySemiGroupsAreInAGroup);
         if (studyProgram.HasErrors())
         {
             return BadRequest(studyProgram.Errors);
@@ -64,7 +64,7 @@ public class StudyProgramController : ControllerBase
     public async Task<ActionResult> EditStudyProgram([FromBody] StudyProgramDto studyProgramDto)
     {
         var studyProgram = await _studyProgramRepository.EditStudyProgram(studyProgramDto.Id, studyProgramDto.Name,
-            studyProgramDto.Year, studyProgramDto.WeeksInASemester);
+            studyProgramDto.Year, studyProgramDto.WeeksInASemester,studyProgramDto.NumberOfSemiGroups,studyProgramDto.HowManySemiGroupsAreInAGroup);
         if (studyProgram.HasErrors())
         {
             return BadRequest(studyProgram.Errors);

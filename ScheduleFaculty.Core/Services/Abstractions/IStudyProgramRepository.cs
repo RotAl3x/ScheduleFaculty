@@ -9,8 +9,9 @@ public interface IStudyProgramRepository
     Task<ActionResponse<StudyProgram>> GetStudyProgram(Guid id);
     Task<ActionResponse<List<StudyProgram>>> GetAllStudyProgramS();
 
-    Task<ActionResponse<StudyProgram>> CreateStudyProgram(string name, int year, int weeksInASemester);
-    Task<ActionResponse<StudyProgram>> EditStudyProgram(Guid id, string name, int year,int weeksInASemester);
+    Task<ActionResponse<StudyProgram>> CreateStudyProgram(string name, int year, int weeksInASemester,
+        int numberOfSemiGroups, int howManySemiGroupsAreInAGroup);
+    Task<ActionResponse<StudyProgram>> EditStudyProgram(Guid id, string name, int year,int weeksInASemester,int numberOfSemiGroups,int howManySemiGroupsAreInAGroup);
     Task<ActionResponse> DeleteStudyProgram(Guid id);
     
     Task SaveStudyProgram();
