@@ -14,5 +14,4 @@ public class CourseHourType
     public Guid HourTypeId { get; set; }
     public HourType HourType { get; set; }
     
-    public int TotalHours { get; set; }
 }

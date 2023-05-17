@@ -7,13 +7,17 @@ public interface ICourseHourTypeRepository
 {
     Task<ActionResponse<CourseHourType>> GetById(Guid id);
     
-    Task<ActionResponse<CourseHourType>> GetByCourseId(Guid courseId);
+    Task<ActionResponse<List<CourseHourType>>> GetByCourseId(Guid courseId);
 
-    Task<ActionResponse<CourseHourType>> GetByHourType(Guid hourType);
+    Task<ActionResponse<List<CourseHourType>>> GetByHourType(Guid hourType);
     
-    Task<ActionResponse<CourseHourType>> Create(Guid courseId,Guid hourTypeId, int totalHours);
+    Task<ActionResponse<List<HourType>>> GetHourTypesByCourseId(Guid courseId);
     
-    Task<ActionResponse<CourseHourType>> Edit(Guid id,Guid courseId,Guid hourTypeId, int totalHours);
+    Task<ActionResponse<CourseHourType>> Create(Guid courseId,Guid hourTypeId);
+    
+    Task<ActionResponse<CourseHourType>> Edit(Guid id,Guid courseId,Guid hourTypeId);
+
+    Task<ActionResponse<List<HourType>>> EditHourTypes(Guid courseId, List<Guid> hourTypeId);
 
     Task<ActionResponse> Delete(Guid id);
 

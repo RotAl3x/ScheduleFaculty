@@ -1,5 +1,6 @@
 import {IStudyProgram} from "./study-program";
 import {IUser} from "./login";
+import {IHourType} from "./hour-type";
 
 export interface ICourse {
   id?: string | null,
@@ -15,6 +16,7 @@ export interface ICourseResponse {
   id: string,
   studyProgram: IStudyProgram,
   professorUser: IUser,
+  hourTypes: IHourType[],
   name: string | null,
   abbreviation: string | null,
   semester: number | null,

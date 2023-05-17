@@ -4,6 +4,7 @@ import {CourseService} from "../../services/course.service";
 import {SnackBarService} from "../../services/snack-bar.service";
 import {MatDialog} from "@angular/material/dialog";
 import {CourseDialogComponent} from "./course-dialog/course-dialog.component";
+import {IHourType} from "../../models/hour-type";
 
 @Component({
   selector: 'app-course-page',
@@ -41,5 +42,11 @@ export class CoursePageComponent {
     dialogRef.afterClosed().subscribe(async result => {
       this.courses = await this.courseService.getAll();
     });
+  }
+
+  hourTypesNameToString(hourTypes:IHourType[]):string{
+    let res = '';
+   hourTypes.forEach(x=>res+=x.name+' ');
+   return res;
   }
 }

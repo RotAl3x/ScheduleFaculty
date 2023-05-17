@@ -8,6 +8,8 @@ import {IStudyProgram} from "../../../models/study-program";
 import {StudyProgramService} from "../../../services/study-program.service";
 import {IUser} from "../../../models/login";
 import {AuthService} from "../../../services/auth.service";
+import {IHourType} from "../../../models/hour-type";
+import {HourTypeService} from "../../../services/hour-type.service";
 
 @Component({
   selector: 'app-course-dialog',
@@ -19,6 +21,7 @@ export class CourseDialogComponent {
   public form = this.formBuilder.group({
     id: ['ddf3c33a-7fa1-442d-9afc-7cac2edb8d3a'],
     studyProgramYearId: ['', [Validators.required]],
+    hourTypeIds: [[''], [Validators.required]],
     professorUserId: ['', [Validators.required]],
     name: ['', [Validators.required]],
     abbreviation: ['', [Validators.required]],
@@ -29,6 +32,8 @@ export class CourseDialogComponent {
 
   public professorUsers: IUser[] = [];
 
+  public hourTypes: IHourType[] = [];
+
   constructor(
     public dialogRef: MatDialogRef<CourseDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ICourseResponse,
@@ -36,6 +41,7 @@ export class CourseDialogComponent {
     private snack: SnackBarService,
     private courseService: CourseService,
     private studyProgramService: StudyProgramService,
+    private hourTypeService: HourTypeService,
     private authService: AuthService
   ) {
   }
@@ -47,10 +53,17 @@ export class CourseDialogComponent {
   async ngOnInit(): Promise<void> {
     this.professorUsers = await this.authService.getUsersByRole('Professor');
     this.studyPrograms = await this.studyProgramService.getAll();
+    this.hourTypes = await this.hourTypeService.getAll();
     if (this.data) {
       this.form.patchValue(this.data);
       this.form.controls.studyProgramYearId.setValue(this.data.studyProgram.id);
       this.form.controls.professorUserId.setValue(this.data.professorUser.id);
+      let hourTypeIds: string[] = [];
+      this.data.hourTypes.forEach(x => {
+        if (x.id) hourTypeIds.push(x.id)
+      });
+      this.form.controls.hourTypeIds.setValue(hourTypeIds);
+      console.log(hourTypeIds);
     }
   }
 

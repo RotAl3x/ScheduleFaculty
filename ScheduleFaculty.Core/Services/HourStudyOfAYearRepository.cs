@@ -166,12 +166,6 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
             return response;
         }
 
-        if (studyWeeks.Count * (endTime - startTime) > courseHourType.TotalHours)
-        {
-            response.AddError("Total hours of course is full");
-            return response;
-        }
-
         var course = courseHourType.Course;
         var studyProgram = course.StudyProgram;
         var hourType = courseHourType.HourType;

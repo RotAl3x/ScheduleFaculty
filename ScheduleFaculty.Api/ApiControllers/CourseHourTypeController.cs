@@ -65,7 +65,7 @@ public class CourseHourTypeController : ControllerBase
     public async Task<ActionResult> Create([FromBody] CourseHourTypeDto courseHourTypeDto)
     {
         var courseHourType = await _courseHourTypeRepository.Create(courseHourTypeDto.CourseId,
-            courseHourTypeDto.HourTypeId, courseHourTypeDto.TotalHours);
+            courseHourTypeDto.HourTypeId);
         if (courseHourType.HasErrors())
         {
             return BadRequest(courseHourType.Errors);
@@ -81,7 +81,7 @@ public class CourseHourTypeController : ControllerBase
     public async Task<ActionResult> Edit([FromBody] CourseHourTypeDto courseHourTypeDto)
     {
         var courseHourType = await _courseHourTypeRepository.Edit(courseHourTypeDto.Id, courseHourTypeDto.CourseId,
-            courseHourTypeDto.HourTypeId, courseHourTypeDto.TotalHours);
+            courseHourTypeDto.HourTypeId);
         if (courseHourType.HasErrors())
         {
             return BadRequest(courseHourType.Errors);

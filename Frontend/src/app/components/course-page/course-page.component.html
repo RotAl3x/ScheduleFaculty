@@ -11,6 +11,8 @@
             Profesor: {{course.professorUser.firstName + ' ' + course.professorUser.lastName}}</mat-card-subtitle>
           <mat-card-subtitle>Semestrul: {{course.semester}}</mat-card-subtitle>
           <mat-card-subtitle>Opțională: {{course.isOptional}}</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="!course.hourTypes">Tipuri de ore: nu are</mat-card-subtitle>
+          <mat-card-subtitle *ngIf="course.hourTypes">Tipuri de ore: {{hourTypesNameToString(course.hourTypes)}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-actions>
           <button (click)="openDialog(course)" mat-button>Editează</button>

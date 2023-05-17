@@ -8,5 +8,4 @@ public class CourseHourTypeDto
     
     public Guid HourTypeId { get; set; }
 
-    public int TotalHours { get; set; }
 }
