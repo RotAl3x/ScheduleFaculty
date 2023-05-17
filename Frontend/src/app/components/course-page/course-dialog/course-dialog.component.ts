@@ -63,7 +63,6 @@ export class CourseDialogComponent {
         if (x.id) hourTypeIds.push(x.id)
       });
       this.form.controls.hourTypeIds.setValue(hourTypeIds);
-      console.log(hourTypeIds);
     }
   }
 
@@ -90,4 +89,5 @@ export class CourseDialogComponent {
   public compareFn(optionOne: any, optionTwo: any): boolean {
     return optionOne.id === optionTwo.id;
   }
+  
 }

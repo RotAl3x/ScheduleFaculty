@@ -127,7 +127,7 @@ public class CourseHourTypeRepository : ICourseHourTypeRepository
 
         foreach (var courseHourType in courseHourTypes)
         {
-            courseHourTypeId.Add(courseHourType.Id);
+            courseHourTypeId.Add(courseHourType.HourTypeId);
         }
 
         var hourTypeToAdd=hourTypeIds.Except(courseHourTypeId);
@@ -137,7 +137,7 @@ public class CourseHourTypeRepository : ICourseHourTypeRepository
             foreach (var hourId in hourTypeToAdd)
             {
                 var courseToAdd = new CourseHourType { CourseId = courseId, HourTypeId = hourId };
-                var dbCourseHourType = await _dbContext.CourseHourTypes.AddAsync(courseToAdd);
+                await _dbContext.CourseHourTypes.AddAsync(courseToAdd);
             }
         }
         

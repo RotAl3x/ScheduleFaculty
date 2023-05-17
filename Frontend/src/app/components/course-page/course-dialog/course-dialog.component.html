@@ -58,7 +58,7 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Tipuro de ora</mat-label>
-    <mat-select [compareWith]="compareFn" formControlName="hourTypeIds" multiple>
+    <mat-select formControlName="hourTypeIds" multiple>
       <mat-option *ngFor="let hourType of hourTypes"
                   [value]="hourType.id">{{hourType.name}}</mat-option>
     </mat-select>
