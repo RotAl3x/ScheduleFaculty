@@ -8,3 +8,8 @@ public class UserDto
     
     public string lastName { get; set; }
 }
+
+public class RoleDto
+{
+    public string name { get; set; }
+}

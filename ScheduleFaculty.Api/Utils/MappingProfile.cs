@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using ScheduleFaculty.Api.DTOs;
 using ScheduleFaculty.Core.Entities;
 using ScheduleFaculty.Core.Utils;

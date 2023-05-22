@@ -18,12 +18,14 @@ namespace ScheduleFaculty.Api.ApiControllers;
 public class AuthController : ControllerBase
 {
     private readonly IIdentityService _identityService;
+    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMapper _mapper;
 
-    public AuthController(IMapper mapper, UserManager<ApplicationUser> userManager, IIdentityService identityService)
+    public AuthController(IMapper mapper, UserManager<ApplicationUser> userManager,RoleManager<IdentityRole> roleManager, IIdentityService identityService)
     {
         _userManager = userManager;
+        _roleManager = roleManager;
         _identityService = identityService;
         _mapper = mapper;
     }
@@ -86,6 +88,25 @@ public class AuthController : ControllerBase
         }
 
         var response = _mapper.Map<List<UserDto>>(users);
+
+        return Ok(response);
+    }
+    
+    [HttpGet("getAllRoles")]
+    public async Task<IActionResult> GetAllRoles()
+    {
+        var roles = await _roleManager.Roles.ToListAsync();
+
+        if (!roles.Any())
+        {
+            return NotFound("Error to find roles");
+        }
+
+        var response=new List<string>();
+        foreach (var role in roles)
+        {
+            response.Add(role.Name);
+        }
 
         return Ok(response);
     }

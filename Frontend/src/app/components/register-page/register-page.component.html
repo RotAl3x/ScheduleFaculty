@@ -1,1 +1,50 @@
-<p>register-page works!</p>
+<div class="container">
+  <h2>Înregistrează</h2>
+  <form [formGroup]="form" class="forms">
+    <mat-form-field class="full-width">
+      <input formControlName="email" matInput placeholder="Email">
+    </mat-form-field>
+    <ng-container *ngIf="!form.controls['email'].untouched && form.controls['email'].errors">
+      <mat-error *ngIf="form.controls['email'].errors['required']">
+        Field is required
+      </mat-error>
+      <mat-error *ngIf="form.controls['email'].errors['email']">
+        Tip incorect
+      </mat-error>
+    </ng-container>
+
+    <mat-form-field class="full-width">
+      <input formControlName="lastName" matInput placeholder="Nume">
+    </mat-form-field>
+    <ng-container *ngIf="!form.controls['lastName'].untouched && form.controls['lastName'].errors">
+      <mat-error *ngIf="form.controls['lastName'].errors['required']">
+        Field is required
+      </mat-error>
+    </ng-container>
+
+    <mat-form-field class="full-width">
+      <input formControlName="firstName" matInput placeholder="Prenume">
+    </mat-form-field>
+    <ng-container *ngIf="!form.controls['firstName'].untouched && form.controls['firstName'].errors">
+      <mat-error *ngIf="form.controls['firstName'].errors['required']">
+        Field is required
+      </mat-error>
+    </ng-container>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Roluri</mat-label>
+      <mat-select formControlName="role" >
+        <mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <ng-container *ngIf="!form.controls['role'].untouched && form.controls['role'].errors">
+      <mat-error *ngIf="form.controls['role'].errors['required']">
+        Field is required
+      </mat-error>
+    </ng-container>
+
+  </form>
+  <div class="buttons">
+    <button (click)="submit($event)" mat-raised-button>Adaugă</button>
+  </div>
+</div>

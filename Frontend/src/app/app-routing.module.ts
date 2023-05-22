@@ -9,6 +9,7 @@ import {StudyProgramPageComponent} from "./components/study-program-page/study-p
 import {StatusPageComponent} from "./components/status-page/status-page.component";
 import {HourTypePageComponent} from "./components/hour-type-page/hour-type-page.component";
 import {SchedulePageComponent} from "./components/schedule-page/schedule-page.component";
+import {RegisterPageComponent} from "./components/register-page/register-page.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -20,6 +21,7 @@ const routes: Routes = [
   {path: "status", component: StatusPageComponent},
   {path:"hour-type", component:HourTypePageComponent},
   {path:"schedule",component:SchedulePageComponent},
+  {path:"register",component:RegisterPageComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
 ];
 

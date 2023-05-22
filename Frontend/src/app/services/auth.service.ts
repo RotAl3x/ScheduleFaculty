@@ -3,7 +3,7 @@ import {environment} from "../../environment/environment";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {LocalStorage} from "@ngx-pwa/local-storage";
-import {IAuthSession, IChangePassword, ILogin, IRegister, IUser} from "../models/login";
+import {IAuthSession, IChangePassword, ILogin, IRegister, IRole, IUser} from "../models/login";
 import {firstValueFrom, map, tap} from "rxjs";
 
 @Injectable({
@@ -40,9 +40,10 @@ export class AuthService {
     return await firstValueFrom(this.http.post(url, data, options));
   }
 
-  public register(data: IRegister): Promise<any> {
+  public async register(data: Partial<IRegister>): Promise<any> {
     const url = this._baseUrl + 'api/auth/register';
-    return firstValueFrom(this.http.post(url, data, {responseType: 'text'}));
+    const options = await this.getOptions(true);
+    return firstValueFrom(this.http.post(url, data, options));
   }
 
   public async saveSession(authSession?: IAuthSession): Promise<void> {
@@ -92,6 +93,11 @@ export class AuthService {
   public async getUsersByRole(role: string): Promise<IUser[]> {
     const url = this._baseUrl + 'api/auth/getAllUsersByRole/' + role;
     return await firstValueFrom(this.http.get<IUser[]>(url));
+  }
+
+  public async getAllRoles(): Promise<string[]> {
+    const url = this._baseUrl + 'api/auth/getAllRoles';
+    return await firstValueFrom(this.http.get<string[]>(url));
   }
 
   public async logout(): Promise<void> {

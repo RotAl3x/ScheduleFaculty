@@ -31,7 +31,6 @@ export class ChangePasswordPageComponent {
       this.snack.openSnackBar('Parola a fost schimbată cu succes!');
 
     } catch (e) {
-      console.log(e);
       this.snack.showError(e);
     }
   }
