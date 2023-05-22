@@ -89,5 +89,6 @@ export class CourseDialogComponent {
   public compareFn(optionOne: any, optionTwo: any): boolean {
     return optionOne.id === optionTwo.id;
   }
-  
+
+
 }

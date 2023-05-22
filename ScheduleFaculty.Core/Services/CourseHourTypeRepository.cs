@@ -34,7 +34,9 @@ public class CourseHourTypeRepository : ICourseHourTypeRepository
     public async Task<ActionResponse<List<CourseHourType>>> GetByCourseId(Guid courseId)
     {
         var response = new ActionResponse<List<CourseHourType>>();
-        var course = await _dbContext.CourseHourTypes.Where(c => c.CourseId == courseId).ToListAsync();
+        var course = await _dbContext.CourseHourTypes.Where(c => c.CourseId == courseId)
+            .Include(c=>c.HourType)
+            .ToListAsync();
 
         if (course.Count == 0)
         {

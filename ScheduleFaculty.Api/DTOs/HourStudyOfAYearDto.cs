@@ -1,3 +1,5 @@
+using ScheduleFaculty.Core.Entities;
+
 namespace ScheduleFaculty.Api.DTOs;
 
 public class HourStudyOfAYearDto
@@ -11,6 +13,27 @@ public class HourStudyOfAYearDto
     public string UserId { get; set; }
 
     public Guid ClassroomId { get; set; }
+
+    public List<int> StudyWeeks { get; set; }
+    
+    public DayOfWeek DayOfWeek { get; set; }
+    
+    public int StartTime { get; set; }
+    
+    public int EndTime { get; set; }
+}
+
+public class HourStudyOfAYearResponseDto
+{
+    public Guid Id { get; set; }
+
+    public List<StudyYearGroup> SemiGroups { get; set; }
+
+    public CourseHourType CourseHourType { get; set; }
+
+    public UserDto User { get; set; }
+
+    public Classroom Classroom { get; set; }
 
     public List<int> StudyWeeks { get; set; }
     

@@ -42,7 +42,7 @@ public class CourseHourTypeController : ControllerBase
             return BadRequest(courseHourType.Errors);
         }
 
-        var response = _mapper.Map<CourseHourTypeDto>(courseHourType.Item);
+        var response = _mapper.Map<List<CourseHourTypeResponseDto>>(courseHourType.Item);
         return Ok(response);
     }
 

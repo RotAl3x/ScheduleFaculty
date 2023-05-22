@@ -15,7 +15,7 @@ export class SnackBarService {
 
   public showError(response: any): void {
     try {
-      this.openSnackBar(response.error[0]);
+      this.openSnackBar(response.error);
     } catch (e) {
       this.openSnackBar('Oops! Ceva nu a mers bine!');
     }

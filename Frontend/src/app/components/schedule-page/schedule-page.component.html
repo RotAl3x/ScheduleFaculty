@@ -1,0 +1,47 @@
+<div class="d-flex search" >
+  <div>
+  <mat-form-field appearance="fill">
+    <mat-label>După e cauți</mat-label>
+    <mat-select [formControl]="wordSearch">
+      <mat-option *ngFor="let word of wordsToSearch" [value]="word">{{word}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" *ngIf="wordSearch.value===wordsToSearch[0]">
+    <mat-label>Program de studiu</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let word of studyPrograms" (click)="getScheduleByStudyProgramId(word.id)" [value]="word">{{word.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" *ngIf="wordSearch.value===wordsToSearch[1]">
+    <mat-label>Sală</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let word of classrooms" [value]="word"
+                  (click)="getScheduleByClassroomId(word.id)">{{word.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  </div>
+  <button class="addButton" (click)="openDialog()" color="primary" mat-raised-button>Adaugă o noua oră</button>
+</div>
+
+<div class="d-flex">
+  <ng-container *ngFor="let schedule of schedules">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{schedule.courseHourType.course.name}}</mat-card-title>
+        <mat-card-subtitle>Semestrul:{{schedule.courseHourType.course.semester}}</mat-card-subtitle>
+        <mat-card-subtitle>Ziua:{{WeekDay[schedule.dayOfWeek]}}</mat-card-subtitle>
+        <mat-card-subtitle>Saptamanile:{{schedule.studyWeeks}}</mat-card-subtitle>
+        <mat-card-subtitle>Start:{{schedule.startTime}}</mat-card-subtitle>
+        <mat-card-subtitle>End:{{schedule.endTime}}</mat-card-subtitle>
+        <mat-card-subtitle>Profesor:{{schedule.user.firstName+' '+schedule.user.lastName}}</mat-card-subtitle>
+        <mat-card-subtitle>Tip de Ora:{{schedule.courseHourType.hourType.name}}</mat-card-subtitle>
+        <mat-card-subtitle>SemiGrupe:{{semiGroupsToString(schedule.semiGroups)}}</mat-card-subtitle>
+      </mat-card-header>
+<!--      <mat-card-actions>-->
+<!--&lt;!&ndash;        <button (click)="openDialog(status)" mat-button>Editează</button>&ndash;&gt;-->
+<!--      </mat-card-actions>-->
+    </mat-card>
+  </ng-container>
+</div>

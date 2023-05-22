@@ -31,6 +31,9 @@ import {StatusPageComponent} from './components/status-page/status-page.componen
 import {StatusDialogComponent} from './components/status-page/status-dialog/status-dialog.component';
 import { HourTypePageComponent } from './components/hour-type-page/hour-type-page.component';
 import { HourTypeDialogComponent } from './components/hour-type-page/hour-type-dialog/hour-type-dialog.component';
+import { SchedulePageComponent } from './components/schedule-page/schedule-page.component';
+import { ScheduleDialogComponent } from './components/schedule-page/schedule-dialog/schedule-dialog.component';
+import { RegisterPageComponent } from './components/register-page/register-page.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +51,10 @@ import { HourTypeDialogComponent } from './components/hour-type-page/hour-type-d
     StatusPageComponent,
     StatusDialogComponent,
     HourTypePageComponent,
-    HourTypeDialogComponent
+    HourTypeDialogComponent,
+    SchedulePageComponent,
+    ScheduleDialogComponent,
+    RegisterPageComponent
   ],
   imports: [
     BrowserModule,

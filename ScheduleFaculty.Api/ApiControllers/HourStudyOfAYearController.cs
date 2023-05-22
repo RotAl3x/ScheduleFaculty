@@ -11,11 +11,13 @@ namespace ScheduleFaculty.Api.ApiControllers;
 public class HourStudyOfAYearController: ControllerBase
 {
     private readonly IHourStudyOfAYearRepository _hourStudyOfAYearRepository;
+    private readonly IGroupsOfAStudyHourRepository _groupsOfAStudyHourRepository;
     private readonly IMapper _mapper;
 
-    public HourStudyOfAYearController(IHourStudyOfAYearRepository hourStudyOfAYearRepository, IMapper mapper)
+    public HourStudyOfAYearController(IHourStudyOfAYearRepository hourStudyOfAYearRepository,IGroupsOfAStudyHourRepository groupsOfAStudyHourRepository, IMapper mapper)
     {
         _hourStudyOfAYearRepository = hourStudyOfAYearRepository;
+        _groupsOfAStudyHourRepository = groupsOfAStudyHourRepository;
         _mapper = mapper;
     }
     
@@ -58,6 +60,24 @@ public class HourStudyOfAYearController: ControllerBase
         return Ok(response);
     }
     
+    [HttpGet("studyProgramId/{id}")]
+    public async Task<ActionResult> GetByStudyProgramId([FromRoute] Guid id)
+    {
+        var hoursStudy = await _hourStudyOfAYearRepository.GetByStudyProgramId(id);
+        if (hoursStudy.HasErrors())
+        {
+            return BadRequest(hoursStudy.Errors);
+        }
+
+        var response = _mapper.Map<List<HourStudyOfAYearResponseDto>>(hoursStudy.Item);
+        foreach (var res in response)
+        {
+            var map = await _groupsOfAStudyHourRepository.GetByHourStudyId(res.Id);
+            res.SemiGroups = map.Item;
+        }
+        return Ok(response);
+    }
+    
     [HttpGet("hourTypeId/{id}")]
     public async Task<ActionResult> GetByHourTypeId([FromRoute] Guid id)
     {
@@ -94,7 +114,12 @@ public class HourStudyOfAYearController: ControllerBase
             return BadRequest(hoursStudy.Errors);
         }
 
-        var response = _mapper.Map<HourStudyOfAYearDto>(hoursStudy.Item);
+        var response = _mapper.Map<List<HourStudyOfAYearResponseDto>>(hoursStudy.Item);
+        foreach (var res in response)
+        {
+            var map = await _groupsOfAStudyHourRepository.GetByHourStudyId(res.Id);
+            res.SemiGroups = map.Item;
+        }
         return Ok(response);
     }
     

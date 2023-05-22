@@ -12,6 +12,8 @@ public interface IHourStudyOfAYearRepository
     Task<ActionResponse<List<HourStudyOfAYear>>> GetByCourseId(Guid courseId);
 
     Task<ActionResponse<List<HourStudyOfAYear>>> GetByHourTypeId(Guid hourTypeId);
+    
+    Task<ActionResponse<List<HourStudyOfAYear>>> GetByStudyProgramId(Guid studyProgramId);
 
     Task<ActionResponse<List<HourStudyOfAYear>>> GetByUserId(string userId);
 

@@ -8,6 +8,7 @@ import {CoursePageComponent} from "./components/course-page/course-page.componen
 import {StudyProgramPageComponent} from "./components/study-program-page/study-program-page.component";
 import {StatusPageComponent} from "./components/status-page/status-page.component";
 import {HourTypePageComponent} from "./components/hour-type-page/hour-type-page.component";
+import {SchedulePageComponent} from "./components/schedule-page/schedule-page.component";
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -18,6 +19,7 @@ const routes: Routes = [
   {path: "study", component: StudyProgramPageComponent},
   {path: "status", component: StatusPageComponent},
   {path:"hour-type", component:HourTypePageComponent},
+  {path:"schedule",component:SchedulePageComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
 ];
 

@@ -94,6 +94,29 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
         return response;
     }
 
+    public async Task<ActionResponse<List<HourStudyOfAYear>>> GetByStudyProgramId(Guid studyProgramId)
+    {
+        var response = new ActionResponse<List<HourStudyOfAYear>>();
+        var hoursStudyOfAYear =
+            await _dbContext.HourStudyOfAYears.Include(h => h.Classroom)
+                .Include(h => h.User)
+                .Include(h => h.CourseHourType)
+                .ThenInclude(c => c.Course)
+                .ThenInclude(c => c.StudyProgram)
+                .Include(h=>h.CourseHourType)
+                .ThenInclude(c=>c.HourType)
+                .Where(h => h.CourseHourType.Course.StudyProgramYearId == studyProgramId).ToListAsync();
+
+        if (hoursStudyOfAYear.Count == 0)
+        {
+            response.AddError("This study program don't have a hour study");
+            return response;
+        }
+
+        response.Item = hoursStudyOfAYear;
+        return response;
+    }
+
     public async Task<ActionResponse<List<HourStudyOfAYear>>> GetByUserId(string userId)
     {
         var response = new ActionResponse<List<HourStudyOfAYear>>();
@@ -114,7 +137,14 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
     {
         var response = new ActionResponse<List<HourStudyOfAYear>>();
         var hoursStudyOfAYear =
-            await _dbContext.HourStudyOfAYears.Where(h => h.ClassroomId == classroomId).ToListAsync();
+            await _dbContext.HourStudyOfAYears.Where(h => h.ClassroomId == classroomId).Include(h => h.Classroom)
+                .Include(h => h.User)
+                .Include(h => h.CourseHourType)
+                .ThenInclude(c => c.Course)
+                .ThenInclude(c => c.StudyProgram)
+                .Include(h=>h.CourseHourType)
+                .ThenInclude(c=>c.HourType)
+                .ToListAsync();
 
         if (hoursStudyOfAYear.Count == 0)
         {
@@ -177,7 +207,7 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
         }
 
         var activeStatus = await _dbContext.Statuses.SingleOrDefaultAsync(s => s.IsActive == true);
-        if (activeStatus is null || activeStatus.Name is "Course" or "NoEditable")
+        if (activeStatus is null || activeStatus.Name!=hourType.Name)
         {
             response.AddError("It's not period!");
             return response;

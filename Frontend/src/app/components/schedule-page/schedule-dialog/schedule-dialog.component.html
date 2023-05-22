@@ -1,0 +1,102 @@
+<form [formGroup]="form" class="forms" style="width: 100%">
+
+  <mat-form-field appearance="fill">
+    <mat-label>Profesor/Laborant</mat-label>
+    <mat-select  formControlName="userId">
+      <mat-option *ngFor="let user of users" [value]="user.id">{{user.firstName+' '+user.lastName}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['userId'].untouched && form.controls['userId'].errors">
+    <mat-error *ngIf="form.controls['userId'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Program de studiu</mat-label>
+    <mat-select [formControl]="studyProgram">
+      <mat-option *ngFor="let study of studyPrograms" [value]="study" (click)="setCoursesByStudyProgramId(study.id)" >{{study.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Cursuri</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let course of courses" [value]="course.id" (click)="setCourseHourTypesByCourseId(course.id)" >{{course.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Tip de oră</mat-label>
+    <mat-select formControlName="courseHourTypeId">
+      <mat-option *ngFor="let course of courseHourTypes" [value]="course.id">{{course.hourType.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['courseHourTypeId'].untouched && form.controls['courseHourTypeId'].errors">
+    <mat-error *ngIf="form.controls['courseHourTypeId'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+  <mat-form-field>
+    <mat-label>În care săptămâni</mat-label>
+    <mat-select formControlName="studyWeeks" multiple>
+      <mat-option *ngFor="let week of findStudyProgramActiveAndReturnAListOfStudyWeeks()" [value]="week">{{week}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['studyWeeks'].untouched && form.controls['studyWeeks'].errors">
+    <mat-error *ngIf="form.controls['studyWeeks'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Sală</mat-label>
+    <mat-select  formControlName="classroomId">
+      <mat-option *ngFor="let classroom of classrooms" [value]="classroom.id">{{classroom.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['classroomId'].untouched && form.controls['classroomId'].errors">
+    <mat-error *ngIf="form.controls['classroomId'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+  <mat-form-field appearance="fill">
+    <mat-label>În care zi</mat-label>
+    <mat-select formControlName="dayOfWeek">
+      <mat-option *ngFor="let day of findClassroomDaysById(this.form.controls.classroomId.value)" [value]="day">{{day}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['dayOfWeek'].untouched && form.controls['dayOfWeek'].errors">
+    <mat-error *ngIf="form.controls['dayOfWeek'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Ora când începe</mat-label>
+    <input formControlName="startTime" matInput type="number">
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['startTime'].untouched && form.controls['startTime'].errors">
+    <mat-error *ngIf="form.controls['startTime'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Ora când se termină</mat-label>
+      <input formControlName="endTime" matInput type="number">
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['endTime'].untouched && form.controls['endTime'].errors">
+    <mat-error *ngIf="form.controls['endTime'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+</form>
+
+<div mat-dialog-actions>
+  <button (click)="onNoClick()" mat-button>Nu mersi</button>
+  <button (click)="submit($event)" mat-button>Submit</button>
+</div>
+

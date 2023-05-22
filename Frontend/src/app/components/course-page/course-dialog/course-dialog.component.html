@@ -57,7 +57,7 @@
   <mat-checkbox formControlName="isOptional">Optional</mat-checkbox>
 
   <mat-form-field appearance="fill">
-    <mat-label>Tipuro de ora</mat-label>
+    <mat-label>Tipuri de oră</mat-label>
     <mat-select formControlName="hourTypeIds" multiple>
       <mat-option *ngFor="let hourType of hourTypes"
                   [value]="hourType.id">{{hourType.name}}</mat-option>

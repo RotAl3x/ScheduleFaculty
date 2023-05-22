@@ -19,5 +19,7 @@ public class MappingProfile : Profile
         CreateMap<CourseHourType, CourseHourTypeDto>().ReverseMap();
         CreateMap<HourStudyOfAYear, HourStudyOfAYearDto>().ReverseMap();
         CreateMap<ApplicationUser, UserDto>().ReverseMap();
+        CreateMap<CourseHourType, CourseHourTypeResponseDto>();
+        CreateMap<HourStudyOfAYear, HourStudyOfAYearResponseDto>();
     }
 }

@@ -41,7 +41,7 @@ export class AuthService {
   }
 
   public register(data: IRegister): Promise<any> {
-    const url = this._baseUrl + 'api/auth/registerSecretary';
+    const url = this._baseUrl + 'api/auth/register';
     return firstValueFrom(this.http.post(url, data, {responseType: 'text'}));
   }
 

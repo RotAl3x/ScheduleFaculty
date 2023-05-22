@@ -23,6 +23,7 @@ public static class CoreSpecifications
         services.AddScoped<ICourseHourTypeRepository, CourseHourTypeRepository>();
         services.AddScoped<IHourStudyOfAYearRepository, HourStudyOfAYearRepository>();
         services.AddScoped<ICheckAvailabilityService, CheckAvailabilityService>();
+        services.AddScoped<IGroupsOfAStudyHourRepository, GroupsOfAStudyHourRepository>();
 
         return services;
     }
