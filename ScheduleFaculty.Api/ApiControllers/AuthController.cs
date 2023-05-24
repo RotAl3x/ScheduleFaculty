@@ -43,8 +43,8 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    [Authorize(Roles = "Secretary,Professor,LabAssistant",
-        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    // [Authorize(Roles = "Secretary,Professor,LabAssistant",
+    //     AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
         var response = await _identityService.Register(request);
