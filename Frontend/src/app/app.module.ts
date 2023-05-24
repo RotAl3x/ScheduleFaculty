@@ -34,6 +34,7 @@ import { HourTypeDialogComponent } from './components/hour-type-page/hour-type-d
 import { SchedulePageComponent } from './components/schedule-page/schedule-page.component';
 import { ScheduleDialogComponent } from './components/schedule-page/schedule-dialog/schedule-dialog.component';
 import { RegisterPageComponent } from './components/register-page/register-page.component';
+import { AddUserToACourseComponent } from './components/add-user-to-a-course/add-user-to-a-course.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { RegisterPageComponent } from './components/register-page/register-page.
     HourTypeDialogComponent,
     SchedulePageComponent,
     ScheduleDialogComponent,
-    RegisterPageComponent
+    RegisterPageComponent,
+    AddUserToACourseComponent
   ],
   imports: [
     BrowserModule,

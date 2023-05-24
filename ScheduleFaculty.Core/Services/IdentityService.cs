@@ -93,15 +93,21 @@ public class IdentityService : IIdentityService
             {
                 Action = "Register"
             };
-            
+
             foreach (var error in createResult.Errors) response.AddError(error.Description);
             return response;
         }
-        
+
 
         var addToRole = await _userManager.AddToRoleAsync(user, request.role);
+        var addToRoleLabAssistant = new IdentityResult();
 
-        if (!addToRole.Succeeded)
+        if (request.role == "Professor")
+        {
+            addToRoleLabAssistant = await _userManager.AddToRoleAsync(user, "LabAssistant");
+        }
+
+        if (!addToRole.Succeeded && !addToRoleLabAssistant.Succeeded)
         {
             var response = new ActionResponse<string>
             {
@@ -145,9 +151,8 @@ public class IdentityService : IIdentityService
         return tokenHandler.WriteToken(token);
     }
 
-    public async Task<ActionResponse<string>> ChangePassword(ChangePasswordRequest request,ApplicationUser user)
+    public async Task<ActionResponse<string>> ChangePassword(ChangePasswordRequest request, ApplicationUser user)
     {
-
         if (!request.newPassword.Equals(request.repeatPassword))
         {
             return new ActionResponse<string>
@@ -156,20 +161,21 @@ public class IdentityService : IIdentityService
                 Errors = new List<string> { "Password don't match" }
             };
         }
-        
+
         var changePassword =
             await _userManager.ChangePasswordAsync(user, request.currentPassword, request.newPassword);
-        
+
         if (!changePassword.Succeeded)
         {
             var response = new ActionResponse<string>
             {
                 Action = "ChangePassword"
             };
-            
+
             foreach (var error in changePassword.Errors) response.AddError(error.Description);
             return response;
         }
+
         return new ActionResponse<string>
         {
             Action = "ChangePassword",

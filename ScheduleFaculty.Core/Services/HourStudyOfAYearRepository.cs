@@ -207,7 +207,7 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
         }
 
         var activeStatus = await _dbContext.Statuses.SingleOrDefaultAsync(s => s.IsActive == true);
-        if (activeStatus is null || activeStatus.Name!=hourType.Name)
+        if (activeStatus is null || (activeStatus.Name=="Perioada Cursurilor" && hourType.NeedAllSemiGroups==false)||(activeStatus.Name=="Perioada laboratoarelor" && hourType.NeedAllSemiGroups==true))
         {
             response.AddError("It's not period!");
             return response;

@@ -39,6 +39,8 @@ export class ScheduleDialogComponent {
   courses: ICourseResponse[] = [];
   classrooms: IClassroom[] = [];
   studyProgram = new FormControl;
+  isSecretary:boolean=false;
+  isProfessor:boolean=false;
 
 
   constructor(
@@ -55,15 +57,24 @@ export class ScheduleDialogComponent {
   }
 
   async ngOnInit(): Promise<void> {
-    combineLatest([
-      this.authService.getUsersByRole('Professor'),
-      this.authService.getUsersByRole('LabAssistant'),
-    ]).pipe(filter((r) => !!r[0] && !!r[1]))
-      .subscribe(([professorUsers, labAssistantUsers]) => {
-          this.users = professorUsers;
-          this.users = this.users.concat(labAssistantUsers);
-        }
-      )
+    this.isSecretary=await this.authService.hasRole('Secretary');
+    this.isProfessor=await this.authService.hasRole('Professor');
+    if(this.isSecretary) {
+      combineLatest([
+        this.authService.getUsersByRole('Professor'),
+        this.authService.getUsersByRole('LabAssistant'),
+      ]).pipe(filter((r) => !!r[0] && !!r[1]))
+        .subscribe(([professorUsers, labAssistantUsers]) => {
+            this.users = professorUsers;
+            this.users = this.users.concat(labAssistantUsers);
+          }
+        )
+    }
+    else {
+      let professorSession= await this.authService.getSession();
+      this.form.controls.userId.setValue(professorSession.userId);
+      this.form.controls.userId.removeValidators([Validators.required]);
+    }
     this.studyPrograms = await this.studyProgramService.getAll();
     this.classrooms = await this.classroomService.getAll();
   }
@@ -93,7 +104,13 @@ export class ScheduleDialogComponent {
   }
 
   public async setCoursesByStudyProgramId(id: string | null) {
-    if (id) this.courses = await this.courseService.getCourseByStudyProgramId(id);
+    if (id){
+      this.courses = await this.courseService.getCourseByStudyProgramId(id);
+      if(this.isProfessor){
+        let session=await this.authService.getSession()
+        this.courses=this.courses.filter(c=>c.professorUser.id==session.userId);
+      }
+    }
   }
 
   public async setCourseHourTypesByCourseId(id: string | null) {

@@ -1,0 +1,29 @@
+<form [formGroup]="form" class="forms">
+  <mat-form-field appearance="fill">
+    <mat-label>Curs</mat-label>
+    <mat-select formControlName="courseId">
+      <mat-option *ngFor="let course of courses" [value]="course.id">{{course.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['courseId'].untouched && form.controls['courseId'].errors">
+    <mat-error *ngIf="form.controls['courseId'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Profesor</mat-label>
+    <mat-select formControlName="professorUserId">
+      <mat-option *ngFor="let user of users" [value]="user.id">{{user.firstName+' '+user.lastName}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <ng-container *ngIf="!form.controls['professorUserId'].untouched && form.controls['professorUserId'].errors">
+    <mat-error *ngIf="form.controls['professorUserId'].errors['required']">
+      Field is required
+    </mat-error>
+  </ng-container>
+
+</form>
+<div mat-dialog-actions>
+  <button (click)="submit($event)" mat-button>Submit</button>
+</div>

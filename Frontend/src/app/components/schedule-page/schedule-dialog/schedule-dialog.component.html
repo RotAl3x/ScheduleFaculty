@@ -1,6 +1,6 @@
 <form [formGroup]="form" class="forms" style="width: 100%">
 
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" *ngIf="isSecretary">
     <mat-label>Profesor/Laborant</mat-label>
     <mat-select  formControlName="userId">
       <mat-option *ngFor="let user of users" [value]="user.id">{{user.firstName+' '+user.lastName}}</mat-option>

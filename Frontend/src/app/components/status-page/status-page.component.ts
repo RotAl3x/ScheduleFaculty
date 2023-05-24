@@ -3,6 +3,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {IStatus} from "../../models/status";
 import {StatusService} from "../../services/status.service";
 import {StatusDialogComponent} from "./status-dialog/status-dialog.component";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-status-page',
@@ -12,13 +13,16 @@ import {StatusDialogComponent} from "./status-dialog/status-dialog.component";
 export class StatusPageComponent {
 
   public statuses: IStatus[] | undefined;
+  public isSecretary:boolean=false;
 
   constructor(private statusService: StatusService,
+              private authService:AuthService,
               public dialog: MatDialog) {
   }
 
   async ngOnInit() {
     this.statuses = await this.statusService.getAll();
+    this.isSecretary=await this.authService.hasRole('Secretary');
   }
 
   openDialog(status: IStatus | null): void {

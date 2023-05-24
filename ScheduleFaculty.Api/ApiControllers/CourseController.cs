@@ -14,13 +14,15 @@ namespace ScheduleFaculty.Api.ApiControllers;
 public class CourseController : ControllerBase
 {
     private readonly ICourseRepository _courseRepository;
+    private readonly IAssignedCourseUserRepository _assignedCourseUserRepository;
     private readonly ICourseHourTypeRepository _courseHourTypeRepository;
     private readonly IMapper _mapper;
 
-    public CourseController(ICourseHourTypeRepository courseHourTypeRepository,ICourseRepository courseRepository, IMapper mapper)
+    public CourseController(IAssignedCourseUserRepository assignedCourseUserRepository,ICourseHourTypeRepository courseHourTypeRepository,ICourseRepository courseRepository, IMapper mapper)
     {
         _courseRepository = courseRepository;
         _courseHourTypeRepository = courseHourTypeRepository;
+        _assignedCourseUserRepository = assignedCourseUserRepository;
         _mapper = mapper;
     }
 
@@ -99,11 +101,20 @@ public class CourseController : ControllerBase
     {
         var course = await _courseRepository.CreateCourse(courseDto.StudyProgramYearId, courseDto.ProfessorUserId,
             courseDto.Name, courseDto.Abbreviation, courseDto.Semester, courseDto.IsOptional);
+        
         if (course.HasErrors())
         {
             return BadRequest(course.Errors);
         }
 
+        var assignedCourseUser =
+            await _assignedCourseUserRepository.CreateAssignedCourseUser(course.Item.Id, course.Item.ProfessorUserId);
+        
+        if (assignedCourseUser.HasErrors())
+        {
+            return BadRequest(assignedCourseUser.Errors);
+        }
+        
         var hourTypes = new List<HourType>();
 
         foreach (var hourTypeId in courseDto.HourTypeIds)

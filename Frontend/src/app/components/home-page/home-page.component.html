@@ -1,7 +1,12 @@
+<ng-container *ngIf="isSecretary">
 <button [routerLink]="['/classroom']" mat-raised-button>Clase</button>
 <button [routerLink]="['/course']" mat-raised-button>Cursuri</button>
 <button [routerLink]="['/study']" mat-raised-button>Programe de studii</button>
-<button [routerLink]="['/status']" mat-raised-button>Status</button>
 <button [routerLink]="['/hour-type']" mat-raised-button>Tipuri de oră</button>
-<button [routerLink]="['/schedule']" mat-raised-button>Orare</button>
 <button [routerLink]="['/register']" mat-raised-button>Înregistrează</button>
+</ng-container>
+<ng-container *ngIf="!isLabAssistant">
+  <button [routerLink]="['/add-course']" mat-raised-button>Adaugă laborant la curs</button>
+</ng-container>
+<button [routerLink]="['/status']" mat-raised-button>Status</button>
+<button [routerLink]="['/schedule']" mat-raised-button>Orare</button>
