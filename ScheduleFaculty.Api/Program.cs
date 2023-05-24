@@ -21,7 +21,7 @@ services.AddCors(options =>
     options.AddPolicy("ScheduleFacultyCorsPolicy", builder =>
     {
         builder
-            .WithOrigins("http://localhost:4200")
+            .WithOrigins("*")
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
