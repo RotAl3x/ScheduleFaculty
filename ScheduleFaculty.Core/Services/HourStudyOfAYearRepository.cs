@@ -98,7 +98,7 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
         }
         
         var hoursStudyOfAYear =
-            await _dbContext.HourStudyOfAYears.Where(h => h.ClassroomId==classroom.Id).Include(h => h.Classroom)
+            await _dbContext.HourStudyOfAYears.Where(h => h.Classroom.MACAddress==MACAddress).Include(h => h.Classroom)
                 .Include(h => h.User)
                 .Include(h => h.CourseHourType)
                 .ThenInclude(c => c.Course)
