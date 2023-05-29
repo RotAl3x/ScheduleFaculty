@@ -10,6 +10,8 @@ public interface IHourStudyOfAYearRepository
     Task<ActionResponse<List<HourStudyOfAYear>>> GetByStudyYearSemiGroupId(Guid semiGroupId);
 
     Task<ActionResponse<List<HourStudyOfAYear>>> GetByCourseId(Guid courseId);
+    
+    Task<ActionResponse<List<HourStudyOfAYear>>> GetByMACAddress(string MACAddress);
 
     Task<ActionResponse<List<HourStudyOfAYear>>> GetByHourTypeId(Guid hourTypeId);
     

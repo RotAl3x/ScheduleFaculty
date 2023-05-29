@@ -123,6 +123,24 @@ public class HourStudyOfAYearController: ControllerBase
         return Ok(response);
     }
     
+    [HttpGet("MACAddress/{MAC}")]
+    public async Task<ActionResult> GetByMACAddress([FromRoute] string MAC)
+    {
+        var hoursStudy = await _hourStudyOfAYearRepository.GetByMACAddress(MAC);
+        if (hoursStudy.HasErrors())
+        {
+            return BadRequest(hoursStudy.Errors);
+        }
+
+        var response = _mapper.Map<List<HourStudyOfAYearResponseDto>>(hoursStudy.Item);
+        foreach (var res in response)
+        {
+            var map = await _groupsOfAStudyHourRepository.GetByHourStudyId(res.Id);
+            res.SemiGroups = map.Item;
+        }
+        return Ok(response);
+    }
+    
     [HttpGet("getAll")]
     public async Task<ActionResult> GetAllHourStudyOfAYear()
     {

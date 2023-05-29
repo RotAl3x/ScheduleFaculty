@@ -77,6 +77,46 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
         return response;
     }
 
+    public async Task<ActionResponse<List<HourStudyOfAYear>>> GetByMACAddress(string MACAddress)
+    {
+        var response = new ActionResponse<List<HourStudyOfAYear>>();
+
+        var classroomExist = await _dbContext.Classrooms.SingleOrDefaultAsync(c => c.MACAddress == MACAddress);
+
+        var classroom = new Classroom();
+
+        if (classroomExist is null)
+        {
+            classroom = await _dbContext.Classrooms.FirstOrDefaultAsync(c => c.MACAddress==null);
+            if (classroom is null)
+            {
+                response.AddError("Classrooms MAC address are full");
+                return response;
+            }
+            classroom.MACAddress = MACAddress;
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        var hoursStudyOfAYear =
+            await _dbContext.HourStudyOfAYears.Where(h => h.ClassroomId==classroom.Id).Include(h => h.Classroom)
+                .Include(h => h.User)
+                .Include(h => h.CourseHourType)
+                .ThenInclude(c => c.Course)
+                .ThenInclude(c => c.StudyProgram)
+                .Include(h=>h.CourseHourType)
+                .ThenInclude(c=>c.HourType)
+                .ToListAsync();
+
+        if (hoursStudyOfAYear.Count == 0)
+        {
+            response.AddError("This classroom don't have a hour study");
+            return response;
+        }
+
+        response.Item = hoursStudyOfAYear;
+        return response;
+    }
+
     public async Task<ActionResponse<List<HourStudyOfAYear>>> GetByHourTypeId(Guid hourTypeId)
     {
         var response = new ActionResponse<List<HourStudyOfAYear>>();

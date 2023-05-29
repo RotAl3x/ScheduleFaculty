@@ -10,4 +10,6 @@ public class Classroom
     
     public List<DayOfWeek> DaysOfWeek{ get; set; }
     
+    public string? MACAddress { get; set; }
+    
 }
