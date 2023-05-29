@@ -81,7 +81,7 @@ public class HourStudyOfAYearRepository : IHourStudyOfAYearRepository
     {
         var response = new ActionResponse<List<HourStudyOfAYear>>();
 
-        var classroomExist = await _dbContext.Classrooms.SingleOrDefaultAsync(c => c.MACAddress == MACAddress);
+        var classroomExist = await _dbContext.Classrooms.FirstOrDefaultAsync(c => c.MACAddress == MACAddress);
 
         var classroom = new Classroom();
 
