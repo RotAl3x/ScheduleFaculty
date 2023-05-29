@@ -8,4 +8,6 @@ public class ClassroomDto
     public string Name { get; set; }
 
     public List<string> DaysOfWeek { get; set; }
+    
+    public string MACAddress { get; set; }
 }
