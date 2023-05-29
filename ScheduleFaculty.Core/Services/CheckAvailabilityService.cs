@@ -104,7 +104,7 @@ public class CheckAvailabilityService : ICheckAvailabilityService
             return response;
         }
 
-        if (course.IsOptional)
+        if (course.IsOptional&&hourType.NeedAllSemiGroups)
         {
             var checkIfAHourTypeThatNeedAllSemigroupsAlreadyOccupiedThisHours = await CheckIfStudyYearIsAvailable(
                 course.StudyProgramYearId, startTime, endTime, dayOfWeek,
@@ -115,7 +115,7 @@ public class CheckAvailabilityService : ICheckAvailabilityService
                 response.AddError(checkIfAHourTypeThatNeedAllSemigroupsAlreadyOccupiedThisHours.Errors[0]);
                 return response;
             }
-            
+            response.Item = semigroupsWithoutCourseHourType;
             return response;
         }
 
@@ -135,7 +135,7 @@ public class CheckAvailabilityService : ICheckAvailabilityService
             
             var semigroupToCheck = await CheckIfSemigroupIsAvailable(semigroup, startTime, endTime, dayOfWeek,
                 studyWeeks, course.Semester);
-            if ((!semigroupToCheck.HasErrors())||(semigroupsAvailable.Count<hourType.SemiGroupsPerHour))
+            if ((!semigroupToCheck.HasErrors())&&(semigroupsAvailable.Count<hourType.SemiGroupsPerHour))
             {
                 semigroupsAvailable.Add(semigroup);
             }
