@@ -40,7 +40,7 @@ public class ClassroomRepository : IClassroomRepository
         return response;
     }
 
-    public async Task<ActionResponse<Classroom>> CreateClassroom(string name, List<DayOfWeek> freeDays)
+    public async Task<ActionResponse<Classroom>> CreateClassroom(string name, List<DayOfWeek> freeDays, string MACAddress)
     {
         var response = new ActionResponse<Classroom>();
 
@@ -52,7 +52,7 @@ public class ClassroomRepository : IClassroomRepository
             return response;
         }
 
-        var classroom = new Classroom { Name = name, DaysOfWeek = freeDays };
+        var classroom = new Classroom { Name = name, DaysOfWeek = freeDays, MACAddress = MACAddress};
         var dbClassroom = await _dbContext.Classrooms.AddAsync(classroom);
         await _dbContext.SaveChangesAsync();
 
@@ -60,7 +60,7 @@ public class ClassroomRepository : IClassroomRepository
         return response;
     }
 
-    public async Task<ActionResponse<Classroom>> EditClassroom(Guid id, string name, List<DayOfWeek> freeDays)
+    public async Task<ActionResponse<Classroom>> EditClassroom(Guid id, string name, List<DayOfWeek> freeDays,string MACAddress)
     {
         var response = new ActionResponse<Classroom>();
 
@@ -74,6 +74,7 @@ public class ClassroomRepository : IClassroomRepository
 
         classroomToChange.Name = name;
         classroomToChange.DaysOfWeek = freeDays;
+        classroomToChange.MACAddress = MACAddress;
         await _dbContext.SaveChangesAsync();
         response.Item = classroomToChange;
         return response;

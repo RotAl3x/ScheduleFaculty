@@ -63,7 +63,7 @@ public class ClassroomController : ControllerBase
             Enum.TryParse(day, out DayOfWeek free);
             freeDays.Add(free);
         }
-        var classroom = await _classroomRepository.CreateClassroom(classroomDto.Name,freeDays );
+        var classroom = await _classroomRepository.CreateClassroom(classroomDto.Name,freeDays,classroomDto.MACAddress );
         if (classroom.HasErrors())
         {
             return BadRequest(classroom.Errors);
@@ -84,7 +84,7 @@ public class ClassroomController : ControllerBase
             Enum.TryParse(day, out DayOfWeek free);
             freeDays.Add(free);
         }
-        var classroom = await _classroomRepository.EditClassroom(classroomDto.Id,classroomDto.Name, freeDays);
+        var classroom = await _classroomRepository.EditClassroom(classroomDto.Id,classroomDto.Name, freeDays,classroomDto.MACAddress);
         if (classroom.HasErrors())
         {
             return BadRequest(classroom.Errors);
