@@ -9,5 +9,5 @@ public class ClassroomDto
 
     public List<string> DaysOfWeek { get; set; }
     
-    public string MACAddress { get; set; }
+    public string? MACAddress { get; set; }
 }
