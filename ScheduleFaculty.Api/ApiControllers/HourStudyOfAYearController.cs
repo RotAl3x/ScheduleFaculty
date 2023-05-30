@@ -6,21 +6,23 @@ using ScheduleFaculty.Api.DTOs;
 using ScheduleFaculty.Core.Services.Abstractions;
 
 namespace ScheduleFaculty.Api.ApiControllers;
+
 [ApiController]
 [Route("/api/hourStudyOfAYear")]
-public class HourStudyOfAYearController: ControllerBase
+public class HourStudyOfAYearController : ControllerBase
 {
     private readonly IHourStudyOfAYearRepository _hourStudyOfAYearRepository;
     private readonly IGroupsOfAStudyHourRepository _groupsOfAStudyHourRepository;
     private readonly IMapper _mapper;
 
-    public HourStudyOfAYearController(IHourStudyOfAYearRepository hourStudyOfAYearRepository,IGroupsOfAStudyHourRepository groupsOfAStudyHourRepository, IMapper mapper)
+    public HourStudyOfAYearController(IHourStudyOfAYearRepository hourStudyOfAYearRepository,
+        IGroupsOfAStudyHourRepository groupsOfAStudyHourRepository, IMapper mapper)
     {
         _hourStudyOfAYearRepository = hourStudyOfAYearRepository;
         _groupsOfAStudyHourRepository = groupsOfAStudyHourRepository;
         _mapper = mapper;
     }
-    
+
     [HttpGet("{id}")]
     public async Task<ActionResult> GetById([FromRoute] Guid id)
     {
@@ -33,7 +35,7 @@ public class HourStudyOfAYearController: ControllerBase
         var response = _mapper.Map<HourStudyOfAYearDto>(hoursStudy.Item);
         return Ok(response);
     }
-    
+
     [HttpGet("semiGroupId/{id}")]
     public async Task<ActionResult> GetByStudyYearSemiGroupId([FromRoute] Guid id)
     {
@@ -46,7 +48,7 @@ public class HourStudyOfAYearController: ControllerBase
         var response = _mapper.Map<HourStudyOfAYearDto>(hoursStudy.Item);
         return Ok(response);
     }
-    
+
     [HttpGet("courseId/{id}")]
     public async Task<ActionResult> GetByCourseId([FromRoute] Guid id)
     {
@@ -59,7 +61,7 @@ public class HourStudyOfAYearController: ControllerBase
         var response = _mapper.Map<HourStudyOfAYearDto>(hoursStudy.Item);
         return Ok(response);
     }
-    
+
     [HttpGet("studyProgramId/{id}")]
     public async Task<ActionResult> GetByStudyProgramId([FromRoute] Guid id)
     {
@@ -75,9 +77,10 @@ public class HourStudyOfAYearController: ControllerBase
             var map = await _groupsOfAStudyHourRepository.GetByHourStudyId(res.Id);
             res.SemiGroups = map.Item;
         }
+
         return Ok(response);
     }
-    
+
     [HttpGet("hourTypeId/{id}")]
     public async Task<ActionResult> GetByHourTypeId([FromRoute] Guid id)
     {
@@ -90,8 +93,8 @@ public class HourStudyOfAYearController: ControllerBase
         var response = _mapper.Map<HourStudyOfAYearDto>(hoursStudy.Item);
         return Ok(response);
     }
-    
-        
+
+
     [HttpGet("userId/{id}")]
     public async Task<ActionResult> GetByUserId([FromRoute] string id)
     {
@@ -104,7 +107,7 @@ public class HourStudyOfAYearController: ControllerBase
         var response = _mapper.Map<HourStudyOfAYearDto>(hoursStudy.Item);
         return Ok(response);
     }
-    
+
     [HttpGet("classroomId/{id}")]
     public async Task<ActionResult> GetByClassroomId([FromRoute] Guid id)
     {
@@ -120,9 +123,10 @@ public class HourStudyOfAYearController: ControllerBase
             var map = await _groupsOfAStudyHourRepository.GetByHourStudyId(res.Id);
             res.SemiGroups = map.Item;
         }
+
         return Ok(response);
     }
-    
+
     [HttpGet("MACAddress/{MAC}")]
     public async Task<ActionResult> GetByMACAddress([FromRoute] string MAC)
     {
@@ -132,15 +136,29 @@ public class HourStudyOfAYearController: ControllerBase
             return BadRequest(hoursStudy.Errors);
         }
 
-        var response = _mapper.Map<List<HourStudyOfAYearResponseDto>>(hoursStudy.Item);
-        foreach (var res in response)
+        var response = new HourStudyOfAYearMACAddressResponseDto
         {
-            var map = await _groupsOfAStudyHourRepository.GetByHourStudyId(res.Id);
-            res.SemiGroups = map.Item;
+            ClassroomName = hoursStudy.Item[0].Classroom.Name,
+            HourStudyOfAYearMacAddresses = new List<HourStudyOfAYearMACAddress>(),
+        };
+        
+        foreach (var res in hoursStudy.Item)
+        {
+            var addToList = new HourStudyOfAYearMACAddress
+            {
+                UserName = res.User.FirstName + ' ' + res.User.LastName,
+                StudyProgramName = res.CourseHourType.Course.StudyProgram.Name,
+                CourseAbbreviation = res.CourseHourType.Course.Abbreviation,
+                StartTime = res.StartTime,
+                EndTime = res.EndTime,
+                DayOfWeek = res.DayOfWeek.ToString(),
+            };
+            response.HourStudyOfAYearMacAddresses.Add(addToList);
         }
+
         return Ok(response);
     }
-    
+
     [HttpGet("getAll")]
     public async Task<ActionResult> GetAllHourStudyOfAYear()
     {
@@ -153,7 +171,7 @@ public class HourStudyOfAYearController: ControllerBase
         var response = _mapper.Map<List<HourStudyOfAYearDto>>(hoursStudy.Item);
         return Ok(response);
     }
-    
+
     [HttpPost]
     [Authorize(Roles = "Secretary,Professor,LabAssistant",
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -171,7 +189,7 @@ public class HourStudyOfAYearController: ControllerBase
         var response = _mapper.Map<HourStudyOfAYearDto>(createHourStudy.Item);
         return Ok(response);
     }
-    
+
     [HttpDelete("delete/{id}")]
     [Authorize(Roles = "Secretary,Professor,LabAssistant",
         AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

@@ -43,3 +43,26 @@ public class HourStudyOfAYearResponseDto
     
     public int EndTime { get; set; }
 }
+
+public class HourStudyOfAYearMACAddress
+{
+    public string CourseAbbreviation { get; set; }
+    
+    public string StudyProgramName { get; set; }
+    
+    public string UserName { get; set; }
+    
+    public string DayOfWeek { get; set; }
+    
+    public int StartTime { get; set; }
+    
+    public int EndTime { get; set; }
+}
+
+public class HourStudyOfAYearMACAddressResponseDto
+{
+    public string ClassroomName { get; set; }
+    
+    public List<HourStudyOfAYearMACAddress> HourStudyOfAYearMacAddresses { get; set; }
+
+}
