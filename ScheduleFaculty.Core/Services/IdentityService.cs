@@ -85,7 +85,7 @@ public class IdentityService : IIdentityService
             Updated = DateTime.Now
         };
 
-        var createResult = await _userManager.CreateAsync(user, "parola01");
+        var createResult = await _userManager.CreateAsync(user, "parola");
 
         if (!createResult.Succeeded)
         {
